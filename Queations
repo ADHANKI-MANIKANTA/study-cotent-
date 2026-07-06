@@ -1,0 +1,11 @@
+1}  You are part of an SRE team managing a microservices application deployed on Kubernetes. One of the critical services (payment-service) is running inside a container. Recently, alerts started firing because the service is intermittently going down. On investigation, you notice: Pods are restarting frequently kubectl describe pod shows: Last State: Terminated (Exit Code: 137) Application logs do not show any clear error before termination CPU usage looks normal, but memory usage spikes occasionally What does exit code 137 indicate in this scenario? Why might this issue not appear directly in application logs? How would you confirm the root cause of the problem? What are the possible reasons for this happening in a Kubernetes environment?
+
+2} How would you approach troubleshooting this issue step by step? How would you determine if the issue is with the pipeline itself vs the target environment? What tools or commands would you use to debug the failure in Kubernetes? How would you handle this situation if it is blocking a critical production release?
+
+3} You are asked to design and implement monitoring & observability for this service using industry-standard tools.? Make sure 1. properly collect metrics, logs, and traces. 2. Provide dashboards and alerts. 3. Ensure the solution is scalable, cost-efficient, and secure 4. Integrate health checks and service-level indicators/alerting.
+
+4} we have certain date transfor job will be runnign on cloud it will run only for 3 hours day to transfor huge data in day time we we dont have any work with that which component or which feture you use , how do you set up cost effectively
+
+5} we have an e-com application with microservice and checkout service is failing continued and getting alerts and mails from client , it having high spike count lik 10milion requests so how do truble shoot ? what are yoru first 5 steps do you take first action on that if that is not infra isssue it is appliaction issue ? if fix takes more time still service is down how do handel and what you will do.
+
+
