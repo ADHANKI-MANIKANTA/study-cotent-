@@ -1,0 +1,119 @@
+# **Prometheus Notes**
+
+- **Metrics :** any specific target that you want to monitor like cpu, memory usage etc is called metrics.
+- Types: Counters, Histogram, Guages, Summary
+- **Counters :** Counters are cumulative metrics that represent a monotonically increasing value.
+- **Guage :** Gauges are metrics that represent a single numerical value that can arbitrarily go up and down.
+- **Histograms:** measure the distribution of a set of values into configurable buckets, providing a count of observations in each bucket.
+- **Summary:** Similar to histograms, summaries also track the distribution of values, but they calculate quantiles instead of bucket counts. Summaries provide information about the distribution of observed values, such as the 50th, 90th, and 99th percentiles.
+
+**Kube-state-metrics:** It is a cluster level component which periodically scrapes **metrics** from all Kubernetes nodes served by **Kubelet** through **Metrics** API.
+
+**To find node details :** node_uname_info or kube_node_info
+
+**To find node cpu usage:** 100 * avg(1 - rate(node_cpu_seconds_total{mode="idle"}[5m])) by (instance).  or 100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
+
+**To find node memory usage:**  (node_memory_MemTotal_bytes - node_memory_MemFree_bytes - node_memory_Buffers_bytes - node_memory_Cached_bytes) / node_memory_MemTotal_bytes * 100
+
+**CPU Usage by Pod on Each Node (in Cores):** sum(rate(container_cpu_usage_seconds_total{container!="POD",container!=""}[5m])) by (node, pod)
+
+**Memory Usage by Pod on Each Node:** sum(container_memory_usage_bytes{container!="POD",container!=""}) by (node, pod)
+
+### For the Pod: `zone-monitoring-kube-state-metrics-6c954bf5b8-zkft6`
+
+1. **CPU Usage of the Pod:** sum(rate(container_cpu_usage_seconds_total{pod="zone-monitoring-kube-state-metrics-6c954bf5b8-zkft6"}[5m])) by (container)
+
+**Memory Usage of the Pod:** sum(container_memory_usage_bytes{pod="zone-monitoring-kube-state-metrics-6c954bf5b8-zkft6"}) by (container)
+
+**PromQL query to check the ephemeral storage usage of the specific pod `zone-monitoring-kube-state-metrics-6c954bf5b8-zkft6`:**
+
+sum(container_fs_usage_bytes{pod="zone-monitoring-kube-state-metrics-6c954bf5b8-zkft6"}) by (container)
+
+**CPU Usage of the Node:** sum(rate(node_cpu_seconds_total{instance="ip-10-196-64-174.ap-south-1.compute.internal:9100"}[5m])) by (mode)
+
+**Memory Usage of the Node:** node_memory_MemTotal_bytes{instance="ip-10-196-64-174.ap-south-1.compute.internal:9100"} - node_memory_MemAvailable_bytes{instance="ip-10-196-64-174.ap-south-1.compute.internal:9100"}
+
+The Node Exporter is a component in the Prometheus monitoring system designed to collect and expose a wide range of hardware and kernel-related metrics from Unix-like systems. It provides detailed information about system resources such as CPU, memory, disk, and network utilization, as well as other important metrics like system load, filesystem stats, and more.
+
+### General System Metrics (Node Exporter)
+
+1. **CPU Usage**
+    - **`node_cpu_seconds_total`**: Total CPU time spent in different modes (user, system, idle, etc.).
+2. **Memory Usage**
+    - **`node_memory_MemAvailable_bytes`**: Available memory.
+    - **`node_memory_MemFree_bytes`**: Free memory.
+3. **Disk I/O**
+    - **`node_disk_io_time_seconds_total`**: Total time spent doing I/Os.
+    - **`node_disk_read_bytes_total`**: Total bytes read from disk.
+    - **`node_disk_written_bytes_total`**: Total bytes written to disk.
+4. **Network**
+    - **`node_network_receive_bytes_total`**: Total bytes received on network interfaces.
+    - **`node_network_transmit_bytes_total`**: Total bytes transmitted on network interfaces.
+5. **Filesystem**
+    - **`node_filesystem_avail_bytes`**: Filesystem space available.
+    - **`node_filesystem_size_bytes`**: Total size of filesystems.
+6. **Load Average**
+    - **`node_load1`**: 1-minute load average.
+    - **`node_load5`**: 5-minute load average.
+    - **`node_load15`**: 15-minute load average.
+
+### Prometheus Internal Metrics
+
+1. **Prometheus Targets**
+    - **`up`**: Whether a target is up or down.
+    - **`scrape_duration_seconds`**: Duration of the scrape.
+2. **Prometheus Performance**
+    - **`prometheus_http_requests_total`**: Total HTTP requests made by Prometheus.
+    - **`prometheus_engine_query_duration_seconds`**: Query execution time.
+
+### Application Metrics
+
+1. **HTTP Requests**
+    - **`http_requests_total`**: Total number of HTTP requests.
+    - **`http_request_duration_seconds`**: HTTP request latencies.
+2. **Database Connections**
+    - **`database_connections`**: Number of active database connections.
+3. **Custom Application Metrics**
+    - These vary widely depending on the application and what it's monitoring.
+
+### Kubernetes Metrics (cAdvisor, kube-state-metrics)
+
+1. **Pod and Node Metrics**
+    - **`kube_pod_info`**: Information about pods.
+    - **`kube_node_status_capacity`**: Node capacity (CPU, memory, pods).
+2. **Deployment and ReplicaSet Metrics**
+    - **`kube_deployment_status_replicas`**: Number of replicas per deployment.
+    - **`kube_replicaset_status_replicas`**: Number of replicas in a ReplicaSet.
+3. **Resource Usage**
+    - **`container_cpu_usage_seconds_total`**: CPU usage of containers.
+    - **`container_memory_usage_bytes`**: Memory usage of containers.
+
+### Exporter-Specific Metrics
+
+- **Node Exporter**: Metrics about system and hardware.
+- **cAdvisor**: Container metrics.
+- **Blackbox Exporter**: Metrics about HTTP, DNS, TCP, and ICMP.
+- **JMX Exporter**: Java application metrics.
+- **To see all metrics:** group by(__name__) ({__name__!=""})
+
+How to check the actual port of Node Exporter running?
+
+**ingestion rate**" typically refers to the rate at which data is being ingested, or collected and stored, by the monitoring system. This can include various metrics from different sources within your infrastructure.
+
+**`scrape_series_added`** is a metric that indicates the number of new series that have been added to Prometheus during a target scrape. To understand this better, let's break down some of the key concepts:
+
+1. **Series**: In Prometheus, a series is a combination of a metric name and a set of labels (key-value pairs) that uniquely identify a metric. For example, **`http_requests_total{method="POST", handler="/api/books"}`** is a series.
+2. **Scrape**: Prometheus collects metrics from configured targets by scraping them at regular intervals. During each scrape, it requests data from the targets' **`/metrics`** endpoints.
+
+    Pod Sandbox" refers to the environment in which a Pod and its containers are run. This environment includes the container runtime, networking setup, and other low-level components necessary for running the containers in a Pod. When you encounter "Pod Sandbox errors," it typically indicates issues at this foundational level of container orchestration.
+
+    ### Common Causes of Pod Sandbox Errors:
+
+    1. **Container Runtime Issues**: Problems with the container runtime (like Docker, containerd, or CRI-O) can lead to sandbox errors. This might be due to runtime misconfiguration, failures in the runtime service, or compatibility issues.
+    2. **Networking Problems**: Kubernetes sets up a network for each Pod (the "sandbox"). Issues in this network setup, such as conflicts in IP allocation, DNS misconfigurations, or problems with network plugins (like Calico or Flannel), can cause sandbox errors.
+    3. **Resource Constraints**: Insufficient resources (like CPU, memory, or disk space) on the node can prevent the successful creation of a Pod's sandbox.
+    4. **Node Health Issues**: If the Kubernetes node itself is experiencing problems (like filesystem corruption, kernel issues, or hardware failures), it can manifest as sandbox errors.
+    5. **Kubernetes Version Mismatch**: Compatibility issues between different versions of Kubernetes components (like kubelet, API server, etc.) can lead to errors in Pod creation and management.
+    6. **Security Constraints**: Security policies or configurations (like SELinux, AppArmor, or specific Pod Security Policies) that are too restrictive can prevent the proper setup of the Pod sandbox.
+
+        https://kubernetes.io/docs/reference/instrumentation/metrics/
