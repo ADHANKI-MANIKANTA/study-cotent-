@@ -1757,3 +1757,371 @@ cloudthrift-backend/
 <img width="2248" height="1309" alt="image" src="https://github.com/user-attachments/assets/988c08d7-ade6-45fb-97b4-36d6be2934af" />
 https://instances.vantage.sh/
                           
+
+Hi Adhanki Manikanta
+Daily Routine Start
+My day as a DevOps engineer typically begins with a quick health check of critical systems. I start by reviewing overnight alerts in tools like Prometheus/Grafana or Datadog, scanning Slack/Teams for urgent incidents (e.g., pipeline failures or downtime), and triaging any PagerDuty escalations to ensure SLAs are met—prioritizing fixes like restoring a broken deployment before stand-ups. This is followed by a 15-minute team stand-up to align on priorities, then diving into automation backlog tasks such as optimizing CI/CD workflows or infrastructure tweaks. I then check the CI/CD pipelines to see if any deployments failed. During the Daily Stand-up, I align with the dev teams to unblock any infrastructure dependencies. My focus then shifts to 'SRE-style' work: 50% on operational tasks (fixing pipeline bottlenecks or scaling issues) and 50% on engineering projects like automating manual workflows or optimizing cloud costs."
+HPA Configuration Steps
+Horizontal Pod Autoscaler (HPA) in Kubernetes automatically scales pod replicas based on observed metrics, and I've configured it extensively for microservices handling millions of requests daily. To set it up: (1) Ensure Metrics Server is installed (kubectl top nodes works); (2) Create an HPA YAML manifest targeting a Deployment; (3) Apply with kubectl apply -f hpa.yaml; (4) Monitor via kubectl get hpa and kubectl describe hpa. Key parameters include: apiVersion: autoscaling/v2, scaleTargetRef (targets Deployment kind/name), minReplicas/maxReplicas (e.g., 3/20), behavior (scaleUp/scaleDown policies for stabilizationWindowSeconds), and metrics array defining targets like CPU utilization.
+HPA Metrics Overview
+HPA supports three metric types: resource metrics (CPU/memory requests/limits), object metrics (e.g., pods/sec from another object), and external/custom metrics (app-specific via Prometheus Adapter). I configure based on workload: CPU for compute-bound apps (target 70% average), memory for data-heavy services, or custom like requests-per-second (RPS) for web apps—integrated via metricSelector with Prometheus queries exposed through custom.metrics.k8s.io.
+Metrics for HPA Selection
+Primary metrics I consider: CPU utilization (70-80% target for balanced scaling), memory usage (60-75% to avoid OOMKills), custom app metrics (e.g., queue length >50 or RPS >100 via Prometheus), and external metrics from tools like Datadog for business KPIs (e.g., error rate). Selection basis: workload profiling—CPU for stateless APIs, memory+RPS combo for e-commerce spikes; always test in staging with load tools like Locust to avoid flapping.
+Terraform Architecture Experience
+Yes, I've built multiple full-stack architectures using Terraform, such as a multi-region EKS cluster with VPCs, ALBs, RDS, and auto-scaling groups. In one project, I modularized it: root module calls child modules for networking (VPC/subnets), compute (EKS nodes), and storage (EFS/S3); used remote state in S3 with DynamoDB locking; applied via terraform init/plan/apply in GitHub Actions CI/CD. This ensured reproducible, versioned infra across dev/stage/prod.
+Largest Automation Achievement
+The biggest automation I led was a fully self-service GitOps pipeline using ArgoCD, Terraform Cloud, and Crossplane for provisioning 100+ tenant namespaces on EKS, reducing manual infra tickets by 85%. It integrated OPA Gatekeeper for policy-as-code, automated cert rotations via cert-manager, and scaled via KEDA. Impact: Deployment time dropped from 2 days to 15 minutes, costs optimized 40% via spot instances, and engineer productivity boosted—handling 5x traffic growth without downtime.
+HPA Configuration Basis
+I base HPA config on app profiling (historical Prometheus data), SLOs (e.g., 99.9% availability), and load testing: set CPU target at 70% for steady scaling, minReplicas to handle baseline traffic, maxReplicas for bursts (with cooldown 300s), and multiple metrics to prevent single-point failures. Always enable stabilizationWindowSeconds (300s scale-up, 5min scale-down) and monitor for thrashing via kubectl get hpa --watch.
+Application Architecture Built
+Yes, at my company, I architected a resilient e-commerce backend on AWS EKS: ingress via ALB/NLB, services in namespaces with Istio service mesh for traffic splitting/mTLS, persistent Kafka for order queues, and observability stack (Prometheus + Grafana Loki). Built via Terraform modules (network/compute/addons), deployed GitOps-style with FluxCD syncing Helm charts; added HPA/VPA for pods, Cluster Autoscaler for nodes. Process: requirements gathering → TOGAF diagramming → Terraform POC → CI/CD integration → prod rollout with canary blue-green deploys—achieved 99.99% uptime under Black Friday loads.
+Message Queue Tools
+For message queues, I use Kafka (high-throughput event streaming), RabbitMQ (task queues with ACKs), SQS/SNS (serverless AWS), and Redis Streams (lightweight pub/sub). Selection depends on needs: Kafka for ordered, durable logs; RabbitMQ for RPC patterns; SQS for decoupled microservices.
+Kafka Configuration Process
+To configure Kafka: (1) Provision cluster via Strimzi Helm on K8s (helm install kafka strimzi/strimzi-kafka-operator); (2) Create Kafka topic (kubectl apply -f topic.yaml with partitions=10, replicas=3); (3) Set broker configs in CRD (e.g., replicationFactor: 3, min.insync.replicas: 2); (4) Enable TLS/auth with OAuth/OIDC; (5) Integrate with Schema Registry and Kafka Connect for CDC. Tuned for 1M+ msg/sec: num.network.threads=8, log.segment.bytes=1GB.
+Terraform Provisioning Knowledge
+Absolutely—Terraform provisioning uses HCL: define providers (e.g., provider "aws" {region = "us-east-1"}), resources (e.g., resource "aws_eks_cluster" "main" {name = "prod"}), data sources, variables/outputs, and modules. Workflow: init (download providers), plan (diff preview), apply (provision idempotently), destroy. I use workspaces for envs, Terragrunt for DRY, and Sentinel for policy.
+AI Tools in Daily Workflow
+In my DevOps role, I leverage GitHub Copilot for faster IaC/Terraform scripting (suggests 70% of boilerplate), Cursor AI for debugging pipelines, Amazon Q for AWS troubleshooting, and ChatGPT/Claude for diagramming (Mermaid from natural language). Also use Firefly for architecture viz and Perplexity for quick research on edge cases like K8s operators—boosts productivity 30% without compromising security.
+ 
+ 
+ 
+1. tell me how your day will starts as a devops engineer, what will do?
+2. how to configure HPA ? what are the parameters of HPA and on what metrics basis you configure HPA ?
+3. what are metrics that we you consider to configure HPA.?
+4. have you aver build any architecture through terraform ?
+5. what is biggest thing that you automated and build in your current role ? what is the impact of it ?
+6. on what basis you do configure HPA, ?
+7. have you aver build any architecture of application.? take me anything that you build on your company, how you did?
+8. what kind of tools do use in message queue?
+9. how to configure kafka.?
+10. do you know how to write terraform provisioning?
+11. what are all the ai tools that you use in your day to day life ?
+ 
+he asked about some other tools related to voice testing.
+
+1}  You are part of an SRE team managing a microservices application deployed on Kubernetes. One of the critical services (payment-service) is running inside a container. Recently, alerts started firing because the service is intermittently going down. On investigation, you notice: Pods are restarting frequently kubectl describe pod shows: Last State: Terminated (Exit Code: 137) Application logs do not show any clear error before termination CPU usage looks normal, but memory usage spikes occasionally What does exit code 137 indicate in this scenario? Why might this issue not appear directly in application logs? How would you confirm the root cause of the problem? What are the possible reasons for this happening in a Kubernetes environment?
+ 
+2} How would you approach troubleshooting this issue step by step? How would you determine if the issue is with the pipeline itself vs the target environment? What tools or commands would you use to debug the failure in Kubernetes? How would you handle this situation if it is blocking a critical production release?
+ 
+3} You are asked to design and implement monitoring & observability for this service using industry-standard tools.? Make sure 1. properly collect metrics, logs, and traces. 2. Provide dashboards and alerts. 3. Ensure the solution is scalable, cost-efficient, and secure 4. Integrate health checks and service-level indicators/alerting.
+ 
+4} we have certain date transfor job will be runnign on cloud it will run only for 3 hours day to transfor huge data in day time we we dont have any work with that which component or which feture you use , how do you set up cost effectively
+ 
+5} we have an e-com application with microservice and checkout service is failing continued and getting alerts and mails from client , it having high spike count lik 10milion requests so how do truble shoot ? what are yoru first 5 steps do you take first action on that if that is not infra isssue it is appliaction issue ? if fix takes more time still service is down how do handel and what you will do.
+
+Designs, implements, and maintains scalable, reliable, and secure infrastructure solutions    Builds and manages CI/CD pipelines to support rapid and consistent software delivery    Automates infrastructure provisioning using tools like Terraform, Ansible, or CloudFormation    Implements and manages containerization and orchestration technologies (e.g., Docker, Kubernetes)    Monitors system performance and availability using observability tools (e.g., Prometheus, Grafana)    Develops automation tools to reduce manual operational tasks (toil) and improve efficiency    Collaborates with development, QA, and operations teams to ensure smooth software releases    Maintains and optimizes cloud infrastructure (e.g., AWS, Azure) for scalability and cost- efficiency    Enforces security best practices in deployment, infrastructure, and operational processes    Participates in incident response, root cause analysis, and postmortem reviews to improve resilience    Implements and tracks SLOs, SLIs, and error budgets to guide reliability engineering efforts    Optimizes system performance and supports capacity planning across environments    Proficient in scripting and programming languages (e.g., Python, Go, Bash)    Experienced with CI/CD tools and version control systems (e.g., Jenkins, GitLab, Git)    Applies Agile and DevOps methodologies to drive continuous improvement and collaboration 
+
+
+DevOps / Site Reliability Engineer with 3.3 years of solid experience in Application production
+support, Linux, Cloud operations, CI/CD automation, monitoring, and container platforms. Strong
+background in incident management, reliability engineering, and DevOps practices with hands-on
+exposure to AWS, Docker, Kubernetes, Jenkins, Terraform, and modern observability tools. Proven
+ability to support business-critical applications, reduce downtime, and collaborate effectively across
+development and operations teams.
+TECHNICAL SKILLS
+• Cloud & OS: AWS (EC2, IAM, EKS, VPC, S3 – basic), Linux
+• Containers & Platforms: Docker, Kubernetes, Helm Charts
+• CI/CD & Version Control: Jenkins, Git, GitHub, Bitbucket
+• Infrastructure & Automation: Terraform (basic)
+• Monitoring & Observability: Kibana, Elasticsearch, Grafana, Prometheus
+• ITSM & Collaboration: ServiceNow, Jira, Confluence, ITIL
+• Methodologies & Architecture: Agile, Microservices
+
+what kind of alerts do you acknowledge 
+what are the alerts you worked on.
+how do you categorise the alerts and severity for the alert 
+what kind of application it is , is it customer based application ?
+for customer traffic have you observed any CPU utilization, and how you troubleshooted the issue ?
+about HPA in pods , and 
+how do we configer HPA for this application( horizontal pod auto scalar )
+
+          Why do we need HPA?
+How does HPA know the traffic is high?
+How to debug when CPU reaches 100%?
+What are requests and limits in Kubernetes?
+How can we define those thresholds?
+What kind of performance tests are there?
+How do we perform these tests – give one line answers?
+If we have given only requests and no limits, what happens?
+If only requests are defined for a pod, what is the default limit value?
+If a pod is not getting scheduled, what will be the pod state?
+How can we troubleshoot a pod in Pending state?
+How to troubleshoot insufficient resources issue?
+What are other reasons why a pod may not get scheduled?
+If a pod is showing 3/4 running, what does it mean?
+Difference between readiness and liveness probes – one line answer?
+What are the parameters for readiness and liveness probes?
+If liveness check fails, what will be the pod state?
+If readiness check fails, what happens to the pod?
+What does it mean if a pod has no node assigned?
+What are the reasons for a pod not getting assigned to a node?
+What are the mismatches in tolerations?
+Where can we check if a node is not coming up and the reason?
+What is ASG in ECS and how is it assigned?
+What is CAS in Kubernetes? ( cluster auto scalar )
+
+1 .we have one server the CPU and memory is good no issue with that but load average is too high ?
+
+2 . in server CPU and memory and disk all are good still the server is responding slow ?
+
+3. in NFS server we have added a directory and i want to check if client able to see it or not ?
+
+4 . how can i check CPU and memory and disk stats for one week back ?
+
+5 .what is load average ?
+
+6 . Load average metrics means what ?
+
+7. while trying to delete any directory it is showing resources are busy try again ?
+
+8. how can i know is any directory or file who is using which user or which processer , which we are trying to delete ?
+ 
+9. i want to remove the permission to root user to not connect with ssh how ?
+
+10.  what is OOM and what are reasons for OOM ?
+
+11 . what causes high disk usage , or CPU usage ?
+
+12 . if CPU and disk usage is tooo high what we do ?
+
+13. if system slow what you do, all are good CPU and memory and disk ?
+
+14 . how can we know which process is causing for load average high ?
+ 
+ 
+ 
+
+
+Role & Responsibilities
+1) Administer and support distributed Linux systems (RHEL/CentOS 7/8) including authentication, NFS/automount, and desktop environments (KDE/GNOME/VNC).
+2) Troubleshoot and resolve performance, network, and authentication issues to ensure system stability and availability.
+3) Provide first-line user support with clear communication and timely solutions.
+4) Collaborate with network/security teams for issue resolution.
+5) Maintain documentation of incidents, fixes, and system changes.
+6) Work with peers, L2, and L3 teams to continuously improve system performance.
+ 
+ 
+
+1) Diploma/degree in CS/IT or equivalent experience.
+2) 2–3 years of Linux administration experience (RHEL/CentOS 7/8).
+3) Strong troubleshooting skills for Linux workstation and enterprise environments.
+4) Good analytical and problem-solving ability.
+Excellent communication and user engagement skills.
+5) Willingness to work in 24×7 shift support.
+6) RHCE, RHCSA or similar certification preferred.
+7) knowledge of AWS cloud services and their integration with Linux systems.
+ 
+ 
+
+
+ 
+ 
+Experience
+2–4 years of Linux administration experience
+ 
+ 
+1 .we have one server the CPU and memory is good no issue with that but load average is too high ?
+2 . in server CPU and memory and disk all are good still the server is responding slow ?
+3. in NFS server we have added a directory and i want to check if client able to see it or not ?
+4 . how can i check CPU and memory and disk stats for one week back ?
+5 .what is load average ?
+6 . Load average metrics means what ?
+7. while trying to delete any directory it is showing resources are busy try again ?
+8. how can i know is any directory or file who is using which user or which processer , which we are trying to delete ?
+ 
+9. i want to remove the permission to root user to not connect with ssh how ?
+10.  what is OOM and what are reasons for OOM ?
+11 . what causes high disk usage , or CPU usage ?
+12 . if CPU and disk usage is tooo high what we do ?
+13. if system slow what you do, all are good CPU and memory and disk ?
+14 . how can we know which process is causing for load average high ? 
+
+
+
+Hi, I’m Mani, and I have around 3 years of experience in Production Support and DevOps roles, primarily working with cloud-based and containerized environments.
+Mention all the tools and technologies that you know here.
+
+Currently, I’m working as a DevOps/SRE Engineer at MSys Technologies my day to day roles and responsibilites include, where I support cloud-hosted applications running on AWS and Kubernetes. My day-to-day responsibilities include monitoring system health using Grafana, Prometheus, and Kibana, handling P1 and P2 incidents, performing root cause analysis, and ensuring SLA compliance. I’m also involved in deployment support, troubleshooting containerized applications, and maintaining CI/CD pipelines using Jenkins.
+Technically, I have hands-on experience with Linux, AWS EC2, Docker, and Kubernetes. I’ve also worked with Terraform and Ansible for basic infrastructure automation, and I’m continuously improving my skills in DevOps automation and cloud-native technologies.
+ 
+Overall, my core strength lies in production reliability, incident management, and gradually transitioning deeper into DevOps automation and cloud-native practices.
+
+If they ask for all projects them mention all your pojects
+Previously, at GlobalLogic, I supported banking applications in production environments, where I worked extensively on monitoring, incident coordination, and collaborating with DevOps and development teams during outages and maintenance activities.
+
+
+Software Engineer -SRE
+
+ 
+ Designs, implements, and maintains scalable, reliable, and secure infrastructure solutions  
+ Builds and manages CI/CD pipelines to support rapid and consistent software delivery  
+ Automates infrastructure provisioning using tools like Terraform, Ansible, or CloudFormation  
+ Implements and manages containerization and orchestration technologies (e.g., Docker,
+Kubernetes)  
+ Monitors system performance and availability using observability tools (e.g., Prometheus,
+Grafana)  
+ Develops automation tools to reduce manual operational tasks (toil) and improve efficiency  
+ Collaborates with development, QA, and operations teams to ensure smooth software
+releases  
+ Maintains and optimizes cloud infrastructure (e.g., AWS, Azure) for scalability and cost-
+efficiency  
+ Enforces security best practices in deployment, infrastructure, and operational processes  
+ Participates in incident response, root cause analysis, and postmortem reviews to improve
+resilience  
+ Implements and tracks SLOs, SLIs, and error budgets to guide reliability engineering efforts  
+ Optimizes system performance and supports capacity planning across environments  
+ Proficient in scripting and programming languages (e.g., Python, Go, Bash)  
+ Experienced with CI/CD tools and version control systems (e.g., Jenkins, GitLab, Git)  
+ Applies Agile and DevOps methodologies to drive continuous improvement and collaboration 
+
+<img width="800" height="402" alt="image" src="https://github.com/user-attachments/assets/e2675659-6381-4145-bf17-7b8289933d5b" />
+
+<img width="1875" height="933" alt="image" src="https://github.com/user-attachments/assets/9db02586-053e-4509-af4c-ac8f9b242611" />
+
+<img width="1876" height="916" alt="image" src="https://github.com/user-attachments/assets/77625b1f-6fc9-41e7-99b0-588605e65300" />
+<img width="1908" height="1003" alt="image" src="https://github.com/user-attachments/assets/2aea85f1-49d7-47da-9c02-e1a18a30028f" />
+
+<img width="1915" height="1000" alt="image" src="https://github.com/user-attachments/assets/2516bb11-acd8-4200-9b2f-793e6e9a6341" />
+<img width="1902" height="1116" alt="image" src="https://github.com/user-attachments/assets/c13a3dc3-515a-4f46-88fb-68573d69a75f" />
+
+<img width="1891" height="1072" alt="image" src="https://github.com/user-attachments/assets/90021e9b-3f2d-4f93-a67e-63d852e810a1" />
+
+
+
+
+
+
+
+
+alias gpull='git pull'
+alias gpush='git push origin head'
+alias gs='git status'
+alias ga='git add -A'
+alias gcd='git checkout develop'
+alias gcmn='git checkout master'
+alias gd='git diff'
+alias gb='git branch -a'
+alias gst='git stash'
+alias gl='git log --oneline'
+alias tf='terraform'
+alias tfi='terraform init'
+alias tfv='terraform validate'
+alias tfc='terraform console'
+alias tfp='terraform plan'
+alias tfdp='terraform plan -destroy'
+alias tfap='terraform apply'
+alias tfa='terraform apply --auto-approve'
+alias tfd='terraform destroy --auto-approve'
+alias tff='terraform fmt -recursive'
+alias zsh='nano ~/.zshrc'
+alias szsh='source ~/.zshrc'
+alias oc='kubectl'
+alias ksd='kubectl scale deployment '
+alias optuatg='kubectl config use-context zeta-aws-use2-optuat-general'
+alias optuatp='kubectl config use-context zeta-aws-use2-optuat-pci'
+alias optuata='kubectl config use-context zeta-aws-use2-optuat-analytics'
+alias opt1g='kubectl config use-context zeta-aws-use2-opt1-general'
+alias opt1p='kubectl config use-context zeta-aws-use2-opt1-pci'
+alias usnp='kubectl config use-context zeta-aws-use2-cprod-nonpci-eks-01'
+alias usp='kubectl config use-context zeta-aws-use2-cprod-pci-eks-01'
+alias showroom='kubectl config use-context zone-aws-default-pp-mumbai'
+alias cps1='kubectl config use-context zone-aws-common-prod-mumbai'
+alias cps2='kubectl config use-context zeta-aws-aps1-commonprod-space2-eks'
+alias setns='kubectl config set-context --current --namespace '
+alias pod='kubectl get po'
+alias po='kubectl get po'
+alias dep='kubectl get deploy'
+alias svc='kubectl get svc'
+alias ing='kubectl get ing'
+alias cm='kubectl get configmap'
+alias secret='kubectl get secret'
+alias rs='kubectl get rs'
+alias hpa='kubectl get hpa'
+alias pv='kubectl get pv'
+alias pvc='kubectl get pvc'
+alias sa='kubectl get sa'
+alias crb='kubectl get clusterrolebinding'
+alias cr='kubectl get clusterrole'
+alias role='kubectl get role'
+alias rb='kubectl get rolebinding'
+alias ns='kubectl get ns'
+alias node='kubectl get nodes'
+alias crd='kubectl get crd'
+alias logs='kubectl logs'
+alias exec='kubectl exec -it'
+alias kap='kubectl apply -f'
+alias kdel='kubectl delete -f'
+alias kdesc='kubectl describe'
+alias kedit='kubectl edit'
+alias -oy='-o yaml'
+alias -ow='-o wide'
+alias -oj='-o json'
+alias kctx='kubectl config use-context'
+alias kconf='kubectl config view'
+alias kns='kubectl config set-context --current --namespace'
+alias k='kubectl'
+alias kall='kubectl get all'
+alias ktop='kubectl top pod'
+ 
+
+
+  
+Common Container Exit Codes
+Exit Code   Meaning
+---------   ----------------------------------------------
+
+0           Success (container completed normally)
+1           General error (application failure)
+2           Misuse of shell command (invalid syntax, etc.)
+126         Command invoked cannot execute (permission issue)
+127         Command not found
+128         Invalid exit argument
+129         Hangup signal (SIGHUP)
+130         Interrupted (Ctrl + C / SIGINT)
+131         Quit (SIGQUIT)
+132         Illegal instruction
+133         Trace trap
+134         Abort (SIGABRT)
+135         Bus error
+136         Floating point exception
+137         Killed (SIGKILL) → VERY IMPORTANT (OOMKilled / force kill)
+138         User-defined signal 1
+139         Segmentation fault (SIGSEGV)
+140         User-defined signal 2
+141         Broken pipe
+142         Alarm clock
+143         Terminated (SIGTERM) → Graceful shutdown
+144–159     Other signal-related exits
+
+🔹 Kubernetes-Specific Important Ones (🔥 Interview + Real Use)
+137   → OOMKilled (Out Of Memory)
+        - Container exceeded memory limit
+        - Very common in production
+143   → SIGTERM
+        - Pod is gracefully terminated (deployment update / scale down)
+1     → Application error
+        - Check logs immediately
+0     → Job completed successfully (batch jobs, cronjobs)
+
+🔹 Quick Debug Mapping (Real Scenario Thinking)
+Exit Code	What You Should Check
+137	Memory limits, OOMKilled, kubectl describe pod
+143	Deployment rollout / manual delete / autoscaling
+1	App logs (kubectl logs)
+126/127	Dockerfile / command issue
+139	App crash (segfault, mostly C/C++ apps)
+🔹 Pro Debug Commands (🔥 Use in real job)
+kubectl get pods
+kubectl describe pod <pod-name>
+kubectl logs <pod-name> --previous
+kubectl get events --sort-by=.metadata.creationTimestamp
+🔹 Bonus (Interview Tip)
+If interviewer asks:
+👉 “Why did container exit with 137?”
+Answer:
+Exit code 137 means the container was killed by SIGKILL, most commonly due to OOMKilled when it exceeds memory limits set in Kubernetes.
+ 
+
+
+ 
