@@ -1,0 +1,37 @@
+# **Jenkins Notes**
+
+Jenkins is one of the most popular tools used worldwide for continuous integration and continuous delivery.Jenkins is a free and open-source automation server. It enables developers to build, integrate, and test code automatically as soon as it is committed to the source repository. This enables developers to detect errors and bugs at an early stage and deploy more swiftly.It helps in better collaboration between the developers as it takes the latest code and triggers a build as soon as it is added to the shared repository by any developer and notifies if the build was successful or not saving the time and effort by not wasting time looking for bugs.
+
+Jenkins supports the creation of pipelines, which are sets of automated steps that define the entire CI/CD process. Pipelines can include building, testing, and deploying stages, allowing for complex workflows and conditional execution based on different criteria.
+
+**Endpoints-** these are the paths that your API exposes
+
+**Swagger API-** open source tool for creating interactive API documentations.
+
+**What is difference between Jenkins and ArgoCD?**
+
+Here’s a comparison of Jenkins and Argo CD in a table format, highlighting the key differences between these two tools:
+
+| Aspect | Jenkins | Argo CD |
+| --- | --- | --- |
+| **Purpose** | Continuous Integration and Continuous Deployment (CI/CD) tool primarily for building, testing, and deploying applications. | Continuous Deployment tool for declarative, GitOps-style application delivery. |
+| **Use Case** | Used for automating the entire software development process, from code integration and building to testing and deployment. | Focuses on automating application deployment and configuration management in a Kubernetes environment. |
+| **Workflow Automation** | Provides a wide range of build and automation features, including plugins for various tasks. | Focuses on declarative, version-controlled application deployments. |
+| **Configuration** | Uses pipeline definitions (Jenkinsfile) to define build and deployment processes. | Uses Kubernetes manifests and declarative configuration files to define application deployment and sync policies. |
+| **Integrations** | Offers a large number of integrations through plugins, allowing you to connect to various tools and services. | Integrates with Kubernetes and Helm charts for application deployments and Git repositories for configuration. |
+| **Extensibility** | Highly extensible through plugins and a vast plugin ecosystem. | Offers an extension mechanism using Kustomize overlays and Helm charts. |
+| **Deployment Method** | Typically deploys applications to various environments using scripts, custom logic, and plugins. | Enforces GitOps principles by synchronizing applications with Git repositories. |
+
+**Continuous Delivery (CD):**
+
+- **Definition:** Continuous Delivery is a software development practice where code changes are automatically prepared for a release but not automatically deployed to production.
+- **Process:** In a Continuous Delivery pipeline, the entire process of building, testing, and packaging the application is automated. The goal is to have a production-ready build that can be deployed to production at any time. However, the deployment to production is typically triggered manually.
+
+**Continuous Deployment (CD):**
+
+- **Definition:** Continuous Deployment is an extension of continuous delivery where code changes are automatically deployed to production after passing automated tests.
+- **Process:** In a Continuous Deployment pipeline, the automation extends to the deployment phase. Once a code change passes all tests and is considered production-ready, it is automatically deployed to the production environment without manual intervention.
+
+Plugins used to connect to other services like sign in with google, gmail,linkedin etc while login in any website.
+
+A Jenkinsfile is a text file that contains the definition of a Jenkins Pipeline. Jenkins is an open-source automation server that is widely used for building, deploying, and automating projects. A Jenkins Pipeline is a suite of plugins that supports implementing and integrating continuous delivery pipelines into Jenkins.
