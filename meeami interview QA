@@ -1,0 +1,25 @@
+meeami interview questions 
+
+1. tell me how your day will starts as a devops engineer, what will do?
+2. how to configure HPA ? what are the parameters of HPA and on what metrics based you configure HPA ?
+3. what are metrics that we you consider to configure HPA.?
+4. have you aver build any architecture through terraform ?
+5. what is biggest thing that you automated and build in your current role ? what is the impact of it ?
+6. on what basis you do configure HPA, ?
+7. have you aver build any architecture of application.? take me anything that you build on your company, how you did?
+8. what kind of tools do use in message queue?
+9. how to configure kafka.?
+10. do you know how to write terraform provisioning?
+11. what are all the ai tools that you use in your day to day life ?
+
+
+
+
+vertical scalability is incressing the size of pod or node
+horizontal scalability is incressig the number of pods or nodes 
+high availability having multiple availability zones with auto scaling group and load balancer for multi available zones so if one lose it we can have other one with auto scaling so we are highly available.
+
+
+what is load balancing ?
+load balances are server that forward traffic to multiple servers 
+equal distribution , or weighted distribution, ext ...
