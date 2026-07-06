@@ -1,0 +1,50 @@
+What we need to check in ingress logs to identify the issue ,
+
+{
+  "response_code": 500,                 ← ❌ ERROR (backend failure)
+
+  "response_source": "service",         ← 🔥 Error is from backend, NOT ingress
+
+  "service": "perth-service",           ← 🎯 Target service handling request
+
+  "upstream_addr": "172.20.157.217:80",← 📍 Exact backend pod IP
+
+  "uri": "/perth/api/v1/.../cards/...",← 🌐 API endpoint hit
+
+  "method": "GET",                      ← 📥 Request type
+
+  "response_time": 10524,               ← ⏱️ Total time (~10.5 sec)
+
+  "upstream_time": 10522,               ← 🔥 Time spent in backend (very high)
+
+  "upstream_header_time": 10.52,        ← ⏳ Backend took long to respond
+
+  "client_ip": "127.0.0.6",             ← 🌍 Client (internal/proxy)
+
+  "x_forwarded_for": "209.79...",       ← 🌐 Real client IP chain
+
+  "cloudflare_cf_ray": "...",           ← ☁️ Came via Cloudflare
+
+  "olympus_trace_id": "f2f7a284...",    ← 🔗 Trace ID (VERY IMPORTANT)
+
+  "route_name": "perth-service-public-route", ← 🛣️ Routing rule used
+
+  "response_time_secs": 10.524          ← ⏱️ Same latency in seconds
+}
+
+
+
+Cong layer - where - trace id is attached to request
+
+delta -
+vault -
+
+
+delta is separate service that we maintain in Olympus
+
+delta option
+vault option
+
+while we deploying we have to option that mentioned above we can select based on the use case for auth and credential, it will fetch the crux token from there
+
+(we always have to check the logs from the first error not from top first check the timestamps )
