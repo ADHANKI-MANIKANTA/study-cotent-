@@ -1,0 +1,552 @@
+Incident first response (L2): Acknowledge alerts/tickets, validate impact, check recent deployments, identify blast radius, and execute standardized mitigations.
+
+● Stabilize & scale: Adjust autoscaling/instances, recycle unhealthy pods/services, clear stuck queues, and apply safe config toggles/feature flags.
+
+● Voice pipeline checks: Verify call flows, SIP/SPI trunks, WebSocket audio paths, STT/TTS health, latency/jitter, and media server status.
+
+● Observability & runbooks: Use dashboards, traces, and log queries to diagnose; update runbooks/KBs with fixes and post-incident notes.
+
+● Escalation & comms: Follow severity matrix, page the right owner (AI/Backend/DevOps) when needed, and post clear status updates to Slack/Jira.
+
+● Change execution: Run safe, pre-approved changes (config updates, blue/green flips, cache purges, queue drains, canary rollbacks).
+
+● Quality & compliance: Handle PHI carefully; follow access controls and evidence capture for audits (SOC2/HIPAA practices). Qualifications
+
+
+
+● Production ops: 2–5 years in SRE/DevOps/L2 support for cloud-native, customer-facing systems.
+ 
+● Cloud: Solid with AWS (EC2/EKS/ECS, ALB/NLB, S3, CloudWatch, IAM).
+
+● Containers & CI/CD: Docker, Kubernetes fundamentals, rollouts/rollbacks; comfort with Git-based releases.
+
+● Observability: Hands-on with tools like Datadog/Grafana/Prometheus and log stacks (e.g., ELK/CloudWatch Logs). Able to craft quick queries and
+ build useful alerts.
+
+● Networking basics: DNS/TLS, load balancers, health checks, rate limiting, webhooks, WebSockets.
+
+● Incident management: Familiar with on-call etiquette, severity/priority definitions, and writing concise incident timelines.
+
+● Communication: Clear written English for client-facing updates and internal handoffs.
+
+
+
+ based on this JD tell some queatiosn for 3 years candidate
+
+
+k8s Realtime scenarios based on failures we have to check the k8s>...>
+
+what are all the container status codes that if container exit codes we can say...>>>>>
+
+cicd pipeline failures real time scenario based what kind of failures we can expect or what kind of scenarios didn't expected.
+
+deployment failures scenarios expected and unexpected scenarios.
+
+rollback scenarios in real time how we use how to do zero downtime deployment
+
+how to configure SLI,SLO,SLA, and error budget
+
+what do you do if error budget is exceeds your budget in first week or later..
+
+
+how to run health checks for any network ?
+
+is network available ?
+network pen testing ?
+number of packets delivered = number of packets revived?  if packet loss is 0 then network is healthy- (ping <ip>and DNS name >)
+latency check how much time it takes to process the request ?
+snmp tools have to look-
+tracert
+
+
+
+
+
+how do we scale resources based on scenario.
+
+🔥 Simple Explanation (Easy to Say in Interview)
+
+1. Identify the bottleneck
+First, I check what is causing the issue — CPU, memory, or network.
+Example: If CPU is always 90%, that’s the problem.
+
+2. Horizontal Scaling (Scale Out)
+If CPU or memory is high → I increase the number of pods using HPA.
+👉 More pods = load gets distributed.
+
+Example:
+1 pod → 100% CPU
+Add 3 pods → each handles ~30%
+
+3. Vertical Scaling (Scale Up)
+If one pod doesn’t have enough resources → increase CPU/memory limits.
+👉 Make the pod more powerful instead of adding more pods.
+
+Example:
+Pod has 500Mi memory → increase to 1Gi
+
+4. Monitor and Validate
+After scaling, I monitor metrics (CPU, memory, response time)
+👉 Ensure app is stable and performance improved
+
+💡 One-Line Summary (Very Important for Interview)
+
+👉 “First I identify the bottleneck, then scale horizontally using HPA for load distribution or vertically by increasing resources, and finally monitor to ensure stability.”
+
+🔥 Real DevOps Scenario (Say this for impact)
+
+👉 “In production, if traffic suddenly increases, I prefer horizontal scaling using HPA because it’s automatic and handles dynamic load efficiently.”
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+How to Practice (Important)
+
+Don’t just read — do this:
+
+Create namespace:
+kubectl create ns practice
+Deploy nginx:
+kubectl create deployment nginx --image=nginx -n practice
+Scale:
+kubectl scale deployment nginx --replicas=3 -n practice
+Break things:
+Delete pod
+Change image wrong
+Check logs
+############################
+# 🔹 CLUSTER & CONFIG
+############################
+
+kubectl cluster-info
+# Show cluster details (API server, DNS, etc.)
+
+kubectl config view
+# View kubeconfig file
+
+kubectl config current-context
+# Show current cluster context
+
+kubectl config use-context <context-name>
+# Switch cluster context
+
+kubectl get nodes
+# List all nodes in cluster
+
+kubectl describe node <node-name>
+# Detailed node info (CPU, memory, conditions)
+
+kubectl top node
+# Show node CPU & memory usage
+
+
+############################
+# 🔹 NAMESPACE
+############################
+
+kubectl get ns
+# List all namespaces
+
+kubectl create namespace dev
+# Create namespace
+
+kubectl delete namespace dev
+# Delete namespace
+
+kubectl get pods -n dev
+# Get pods in specific namespace
+
+kubectl config set-context --current --namespace=dev
+# Set default namespace
+
+
+############################
+# 🔹 PODS
+############################
+
+kubectl get pods
+# List pods
+
+kubectl get pods -o wide
+# Show pod IP, node info
+
+kubectl describe pod <pod-name>
+# Detailed pod info (events, errors)
+
+kubectl logs <pod-name>
+# View pod logs
+
+kubectl logs <pod-name> -c <container-name>
+# Logs for specific container
+
+kubectl exec -it <pod-name> -- /bin/bash
+# Login into pod
+
+kubectl delete pod <pod-name>
+# Delete pod
+
+kubectl get pods -A
+# Get pods from all namespaces
+
+
+############################
+# 🔹 DEPLOYMENTS
+############################
+
+kubectl get deployments
+# List deployments
+
+kubectl create deployment nginx --image=nginx
+# Create deployment
+
+kubectl describe deployment <name>
+# Deployment details
+
+kubectl scale deployment <name> --replicas=3
+# Scale pods
+
+kubectl rollout status deployment <name>
+# Check rollout status
+
+kubectl rollout restart deployment <name>
+# Restart deployment
+
+kubectl rollout undo deployment <name>
+# Rollback deployment
+
+
+############################
+# 🔹 SERVICES
+############################
+
+kubectl get svc
+# List services
+
+kubectl expose deployment nginx --port=80 --type=NodePort
+# Expose deployment
+
+kubectl describe svc <service-name>
+# Service details
+
+
+############################
+# 🔹 CONFIGMAP & SECRETS
+############################
+
+kubectl get configmap
+# List configmaps
+
+kubectl create configmap app-config --from-literal=key=value
+# Create configmap
+
+kubectl get secrets
+# List secrets
+
+kubectl create secret generic my-secret --from-literal=password=1234
+# Create secret
+
+
+############################
+# 🔹 YAML / APPLY
+############################
+
+kubectl apply -f app.yaml
+# Create/update resources
+
+kubectl delete -f app.yaml
+# Delete resources
+
+kubectl get all -n dev
+# Get all resources in namespace
+
+
+############################
+# 🔹 EVENTS & DEBUGGING
+############################
+
+kubectl get events
+# Show cluster events
+
+kubectl describe pod <pod-name>
+# Check events section (important)
+
+kubectl top pod
+# Check pod resource usage
+
+kubectl get pods --sort-by=.metadata.creationTimestamp
+# Sort pods by creation time
+
+
+############################
+# 🔹 RESOURCE MANAGEMENT
+############################
+
+kubectl edit deployment <name>
+# Edit deployment live
+
+kubectl set image deployment/<name> nginx=nginx:1.25
+# Update image
+
+kubectl autoscale deployment <name> --cpu-percent=70 --min=2 --max=5
+# Enable HPA (auto scaling)
+
+
+############################
+# 🔹 ADVANCED DEBUGGING (SRE LEVEL)
+############################
+
+kubectl get pods -A | grep <app-name>
+# Find pod across namespaces
+
+kubectl describe pod <pod-name> | grep -i error
+# Filter errors
+
+kubectl logs <pod-name> --previous
+# Get logs of crashed container
+
+kubectl exec -it <pod-name> -- env
+# Check environment variables
+
+kubectl get endpoints
+# Check service endpoints (important for debugging)
+
+kubectl port-forward pod/<pod-name> 8080:80
+# Access pod locally
+
+
+############################
+# 🔹 RBAC (ACCESS CONTROL)
+############################
+
+kubectl get roles
+# List roles
+
+kubectl get rolebindings
+# List role bindings
+
+kubectl get clusterroles
+# List cluster roles
+
+kubectl get serviceaccounts
+# List service accounts
+
+
+############################
+# 🔹 STORAGE
+############################
+
+kubectl get pv
+# List persistent volumes
+
+kubectl get pvc
+# List persistent volume claims
+
+kubectl describe pvc <name>
+# PVC details
+
+
+############################
+# 🔹 DAEMONSET / JOBS
+############################
+
+kubectl get daemonsets
+# List daemonsets
+
+kubectl get jobs
+# List jobs
+
+kubectl get cronjobs
+# List cronjobs
+
+
+############################
+# 🔹 CLEANUP / FORCE DELETE
+############################
+
+kubectl delete pod <pod-name> --force --grace-period=0
+# Force delete stuck pod
+
+kubectl delete all --all -n dev
+# Delete all resources in namespace
+
+
+############################
+# 🔹 INTERVIEW SCENARIOS
+############################
+
+# Pod not running
+kubectl describe pod <pod-name>
+kubectl logs <pod-name>
+
+# Pod stuck in Pending
+kubectl describe pod <pod-name>
+
+# High CPU
+kubectl top pod
+kubectl top node
+
+# Service not working
+kubectl get svc
+kubectl get endpoints
+
+# Deployment failed
+kubectl rollout status deployment <name>
+kubectl rollout undo deployment <name>
+
+_____________________________________________________________________________________________________________________
+
+
+
+Here’s a clean, interview-ready overview of HTTP error codes (with meaning + when they occur) 🔥
+
+🌐 HTTP Status Codes (Complete Overview)
+🟢 1xx – Informational
+100  Continue
+101  Switching Protocols
+
+👉 Rare in day-to-day DevOps work
+
+🟢 2xx – Success
+200  OK (Request successful)
+201  Created (Resource created)
+202  Accepted (Processing later)
+204  No Content (Success, no response body)
+
+👉 Example:
+
+API returns 200 → everything working fine
+🟡 3xx – Redirection
+301  Moved Permanently
+302  Found (Temporary redirect)
+304  Not Modified (Cache)
+
+👉 Example:
+
+HTTP → HTTPS redirect
+🔴 4xx – Client Errors (User Side)
+400  Bad Request (Invalid input)
+401  Unauthorized (Auth required)
+403  Forbidden (No permission)
+404  Not Found (Resource missing)
+405  Method Not Allowed
+408  Request Timeout
+409  Conflict
+429  Too Many Requests (Rate limiting)
+
+👉 Meaning:
+👉 Client made a mistake (wrong request, auth issue, etc.)
+
+🔥 5xx – Server Errors (Backend Issues)
+500  Internal Server Error (Generic failure)
+502  Bad Gateway (Invalid backend response)
+503  Service Unavailable (No healthy service)
+504  Gateway Timeout (Backend too slow)
+
+👉 Meaning:
+👉 Problem in backend / infrastructure
+
+🔍 Most Important Codes for DevOps/SRE
+Code	Meaning	Real Cause
+200	Success	Everything fine
+400	Bad request	Wrong API input
+401	Unauthorized	Missing auth
+403	Forbidden	Permission issue
+404	Not found	Wrong URL
+429	Too many requests	Rate limiting
+500	Server error	App bug
+502	Bad gateway	Backend failure
+503	Service unavailable	No pods / overload
+504	Timeout	Slow backend
+🧠 Easy Way to Remember
+
+👉 2xx → Success
+👉 4xx → Client problem
+👉 5xx → Server problem
+
+🎤 Interview Answer (2–3 Lines)
+
+HTTP status codes indicate the result of a request.
+2xx means success, 4xx indicates client-side errors, and 5xx represents server-side issues.
+In DevOps, we mainly focus on 5xx errors like 502, 503, and 504 for backend troubleshooting.
+
+
+
+
+
+
+🔹 Common Container Exit Codes
+Exit Code   Meaning
+---------   ----------------------------------------------
+
+
+0           Success (container completed normally)
+
+1           General error (application failure)
+2           Misuse of shell command (invalid syntax, etc.)
+
+126         Command invoked cannot execute (permission issue)
+127         Command not found
+
+128         Invalid exit argument
+
+129         Hangup signal (SIGHUP)
+130         Interrupted (Ctrl + C / SIGINT)
+131         Quit (SIGQUIT)
+132         Illegal instruction
+133         Trace trap
+134         Abort (SIGABRT)
+135         Bus error
+136         Floating point exception
+137         Killed (SIGKILL) → VERY IMPORTANT (OOMKilled / force kill)
+138         User-defined signal 1
+139         Segmentation fault (SIGSEGV)
+140         User-defined signal 2
+141         Broken pipe
+142         Alarm clock
+143         Terminated (SIGTERM) → Graceful shutdown
+144–159     Other signal-related exits
+
+
+
+🔹 Kubernetes-Specific Important Ones (🔥 Interview + Real Use)
+
+137   → OOMKilled (Out Of Memory)
+        - Container exceeded memory limit
+        - Very common in production
+
+143   → SIGTERM
+        - Pod is gracefully terminated (deployment update / scale down)
+
+1     → Application error
+        - Check logs immediately
+
+0     → Job completed successfully (batch jobs, cronjobs)
+
+
+🔹 Quick Debug Mapping (Real Scenario Thinking)
+
+Exit Code	What You Should Check
+137	Memory limits, OOMKilled, kubectl describe pod
+143	Deployment rollout / manual delete / autoscaling
+1	App logs (kubectl logs)
+126/127	Dockerfile / command issue
+139	App crash (segfault, mostly C/C++ apps)
+
+🔹 Pro Debug Commands (🔥 Use in real job)
+
+kubectl get pods
+kubectl describe pod <pod-name>
+kubectl logs <pod-name> --previous
+kubectl get events --sort-by=.metadata.creationTimestamp
+
+🔹 Bonus (Interview Tip)
+
+If interviewer asks:
+
+👉 “Why did container exit with 137?”
+
+Answer:
+
+Exit code 137 means the container was killed by SIGKILL, most commonly due to OOMKilled when it exceeds memory limits set in Kubernetes.
