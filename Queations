@@ -37,3 +37,112 @@ Recently, I had a great DevOps interview experience with the Samsung company. He
 8. What kind of scripting is used for the pipeline? Explain scripting.
 9. What kind of pipeline did you write, and how do you check the error logs?
 10. Explain how you implement date and time in shell scripting.
+
+
+
+
+
+
+
+based on yesterday interview this are the question that they are asked 
+1. tell me how your day will starts as a devops engineer, what will do?
+2. how to configure HPA ? what are the parameters of HPA and on what metrics based you configure HPA ?
+3. what are metrics that we you consider to configure HPA.?
+4. have you aver build any architecture through terraform ?
+5. what is biggest thing that you automated and build in your current role ? what is the impact of it ?
+6. on what basis you do configure HPA, ?
+7. have you aver build any architecture of application.? take me anything that you build on your company, how you did?
+8. what kind of tools do use in message queue?
+9. how to configure kafka.?
+10. do you know how to write terraform provisioning?
+11. what are all the ai tools that you use in your day to day life ?
+13. Explain me the troubleshooting flow ? with use case?
+14. explain me highly available and multi zone architecture for 3 tire application ?
+15. what GC ?
+16. SLA, SLO, SLI, ?
+17. Error budget ?
+19. exit code 137 ?
+20. explain me one big production issue you fixed and how did you handled?
+21. how do you setup complete CICD pipeline, what are all the security practices do you follow ?
+22. have you worked on multi cloud ?
+23. have you aver worked on SNS ?
+24. what makes difference between private and public subnet ?
+25. what are all the security practices do you follow while provisioning ?
+26. 
+
+have you done any migration ?, explain the migration pipeline stages?
+what kind of alerts do you acknowledge 
+what are the alerts you worked on.
+how do you categorise the alerts and severity for the alert 
+what kind of application it is , is it customer based application ?
+for customer traffic have you observed any CPU utilization, and how you troubleshooted the issue ?
+about HPA in pods , and 
+how do we configer HPA for this application( horizontal pod auto scalar )
+
+How does HPA know the traffic is high?
+How to debug when CPU reaches 100%?
+What are requests and limits in Kubernetes?
+How can we define those thresholds?
+What kind of performance tests are there?
+How do we perform these tests – give one line answers?
+If we have given only requests and no limits, what happens?
+If only requests are defined for a pod, what is the default limit value?
+If a pod is not getting scheduled, what will be the pod state?
+How can we troubleshoot a pod in Pending state?
+How to troubleshoot insufficient resources issue?
+What are other reasons why a pod may not get scheduled?
+If a pod is showing 3/4 running, what does it mean?
+Difference between readiness and liveness probes – one line answer?
+What are the parameters for readiness and liveness probes?
+If liveness check fails, what will be the pod state?
+If readiness check fails, what happens to the pod?
+What does it mean if a pod has no node assigned?
+What are the reasons for a pod not getting assigned to a node?
+What are the mismatches in tolerations?
+Where can we check if a node is not coming up and the reason?
+What is ASG in ECS and how is it assigned?
+What is CAS in Kubernetes? ( cluster auto scalar )
+ 
+
+
+
+
+1}  You are part of an SRE team managing a microservices application deployed on Kubernetes. One of the critical services (payment-service) is running inside a container. Recently, alerts started firing because the service is intermittently going down. On investigation, you notice: Pods are restarting frequently kubectl describe pod shows: Last State: Terminated (Exit Code: 137) Application logs do not show any clear error before termination CPU usage looks normal, but memory usage spikes occasionally What does exit code 137 indicate in this scenario? Why might this issue not appear directly in application logs? How would you confirm the root cause of the problem? What are the possible reasons for this happening in a Kubernetes environment?
+ 
+2} How would you approach troubleshooting this issue step by step? How would you determine if the issue is with the pipeline itself vs the target environment? What tools or commands would you use to debug the failure in Kubernetes? How would you handle this situation if it is blocking a critical production release?
+ 
+3} You are asked to design and implement monitoring & observability for this service using industry-standard tools.? Make sure 1. properly collect metrics, logs, and traces. 2. Provide dashboards and alerts. 3. Ensure the solution is scalable, cost-efficient, and secure 4. Integrate health checks and service-level indicators/alerting.
+ 
+4} we have certain date transfor job will be runnign on cloud it will run only for 3 hours day to transfor huge data in day time we we dont have any work with that which component or which feture you use , how do you set up cost effectively
+ 
+5} we have an e-com application with microservice and checkout service is failing continued and getting alerts and mails from client , it having high spike count lik 10milion requests so how do truble shoot ? what are yoru first 5 steps do you take first action on that if that is not infra isssue it is appliaction issue ? if fix takes more time still service is down how do handel and what you will do.
+
+
+Daily Routine Start
+My day as a DevOps engineer typically begins with a quick health check of critical systems. I start by reviewing overnight alerts in tools like Prometheus/Grafana or Datadog, scanning Slack/Teams for urgent incidents (e.g., pipeline failures or downtime), and triaging any PagerDuty escalations to ensure SLAs are met—prioritizing fixes like restoring a broken deployment before stand-ups. This is followed by a 15-minute team stand-up to align on priorities, then diving into automation backlog tasks such as optimizing CI/CD workflows or infrastructure tweaks. I then check the CI/CD pipelines to see if any deployments failed. During the Daily Stand-up, I align with the dev teams to unblock any infrastructure dependencies. My focus then shifts to 'SRE-style' work: 50% on operational tasks (fixing pipeline bottlenecks or scaling issues) and 50% on engineering projects like automating manual workflows or optimizing cloud costs."
+HPA Configuration Steps
+Horizontal Pod Autoscaler (HPA) in Kubernetes automatically scales pod replicas based on observed metrics, and I've configured it extensively for microservices handling millions of requests daily. To set it up: (1) Ensure Metrics Server is installed (kubectl top nodes works); (2) Create an HPA YAML manifest targeting a Deployment; (3) Apply with kubectl apply -f hpa.yaml; (4) Monitor via kubectl get hpa and kubectl describe hpa. Key parameters include: apiVersion: autoscaling/v2, scaleTargetRef (targets Deployment kind/name), minReplicas/maxReplicas (e.g., 3/20), behavior (scaleUp/scaleDown policies for stabilizationWindowSeconds), and metrics array defining targets like CPU utilization.
+HPA Metrics Overview
+HPA supports three metric types: resource metrics (CPU/memory requests/limits), object metrics (e.g., pods/sec from another object), and external/custom metrics (app-specific via Prometheus Adapter). I configure based on workload: CPU for compute-bound apps (target 70% average), memory for data-heavy services, or custom like requests-per-second (RPS) for web apps—integrated via metricSelector with Prometheus queries exposed through custom.metrics.k8s.io.
+Metrics for HPA Selection
+Primary metrics I consider: CPU utilization (70-80% target for balanced scaling), memory usage (60-75% to avoid OOMKills), custom app metrics (e.g., queue length >50 or RPS >100 via Prometheus), and external metrics from tools like Datadog for business KPIs (e.g., error rate). Selection basis: workload profiling—CPU for stateless APIs, memory+RPS combo for e-commerce spikes; always test in staging with load tools like Locust to avoid flapping.
+Terraform Architecture Experience
+Yes, I've built multiple full-stack architectures using Terraform, such as a multi-region EKS cluster with VPCs, ALBs, RDS, and auto-scaling groups. In one project, I modularized it: root module calls child modules for networking (VPC/subnets), compute (EKS nodes), and storage (EFS/S3); used remote state in S3 with DynamoDB locking; applied via terraform init/plan/apply in GitHub Actions CI/CD. This ensured reproducible, versioned infra across dev/stage/prod.
+Largest Automation Achievement
+The biggest automation I led was a fully self-service GitOps pipeline using ArgoCD, Terraform Cloud, and Crossplane for provisioning 100+ tenant namespaces on EKS, reducing manual infra tickets by 85%. It integrated OPA Gatekeeper for policy-as-code, automated cert rotations via cert-manager, and scaled via KEDA. Impact: Deployment time dropped from 2 days to 15 minutes, costs optimized 40% via spot instances, and engineer productivity boosted—handling 5x traffic growth without downtime.
+HPA Configuration Basis
+I base HPA config on app profiling (historical Prometheus data), SLOs (e.g., 99.9% availability), and load testing: set CPU target at 70% for steady scaling, minReplicas to handle baseline traffic, maxReplicas for bursts (with cooldown 300s), and multiple metrics to prevent single-point failures. Always enable stabilizationWindowSeconds (300s scale-up, 5min scale-down) and monitor for thrashing via kubectl get hpa --watch.
+Application Architecture Built
+Yes, at my company, I architected a resilient e-commerce backend on AWS EKS: ingress via ALB/NLB, services in namespaces with Istio service mesh for traffic splitting/mTLS, persistent Kafka for order queues, and observability stack (Prometheus + Grafana Loki). Built via Terraform modules (network/compute/addons), deployed GitOps-style with FluxCD syncing Helm charts; added HPA/VPA for pods, Cluster Autoscaler for nodes. Process: requirements gathering → TOGAF diagramming → Terraform POC → CI/CD integration → prod rollout with canary blue-green deploys—achieved 99.99% uptime under Black Friday loads.
+Message Queue Tools
+For message queues, I use Kafka (high-throughput event streaming), RabbitMQ (task queues with ACKs), SQS/SNS (serverless AWS), and Redis Streams (lightweight pub/sub). Selection depends on needs: Kafka for ordered, durable logs; RabbitMQ for RPC patterns; SQS for decoupled microservices.
+Kafka Configuration Process
+To configure Kafka: (1) Provision cluster via Strimzi Helm on K8s (helm install kafka strimzi/strimzi-kafka-operator); (2) Create Kafka topic (kubectl apply -f topic.yaml with partitions=10, replicas=3); (3) Set broker configs in CRD (e.g., replicationFactor: 3, min.insync.replicas: 2); (4) Enable TLS/auth with OAuth/OIDC; (5) Integrate with Schema Registry and Kafka Connect for CDC. Tuned for 1M+ msg/sec: num.network.threads=8, log.segment.bytes=1GB.
+Terraform Provisioning Knowledge
+Absolutely—Terraform provisioning uses HCL: define providers (e.g., provider "aws" {region = "us-east-1"}), resources (e.g., resource "aws_eks_cluster" "main" {name = "prod"}), data sources, variables/outputs, and modules. Workflow: init (download providers), plan (diff preview), apply (provision idempotently), destroy. I use workspaces for envs, Terragrunt for DRY, and Sentinel for policy.
+AI Tools in Daily Workflow
+In my DevOps role, I leverage GitHub Copilot for faster IaC/Terraform scripting (suggests 70% of boilerplate), Cursor AI for debugging pipelines, Amazon Q for AWS troubleshooting, and ChatGPT/Claude for diagramming (Mermaid from natural language). Also use Firefly for architecture viz and Perplexity for quick research on edge cases like K8s operators—boosts productivity 30% without compromising security.
+ 
+
+
+
