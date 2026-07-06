@@ -1,0 +1,96 @@
+You are part of an SRE team managing a microservices application deployed on Kubernetes. One of the critical services (payment-service) is running inside a container.
+
+Recently, alerts started firing because the service is intermittently going down. On investigation, you notice:
+
+Pods are restarting frequently
+kubectl describe pod shows: Last State: Terminated (Exit Code: 137)
+Application logs do not show any clear error before termination
+CPU usage looks normal, but memory usage spikes occasionally
+
+What does exit code 137 indicate in this scenario?
+Why might this issue not appear directly in application logs?
+How would you confirm the root cause of the problem?
+What are the possible reasons for this happening in a Kubernetes environment?
+
+Here are concise interview-ready answers (1–2 lines each):
+
+❓ What does Exit Code 137 indicate?
+
+Exit code 137 means the container was forcefully killed (SIGKILL), most commonly due to Out Of Memory (OOMKilled) by the Kubernetes/node kernel.
+
+❓ Why might this not appear in application logs?
+
+Because the process is terminated abruptly by the system, not by the application itself, so it doesn’t get time to log final errors or shutdown gracefully.
+
+❓ How would you confirm root cause?
+
+I would check kubectl describe pod for OOMKilled reason, node memory metrics, and dmesg/CloudWatch logs to confirm kernel memory kill events.
+
+❓ Possible reasons in Kubernetes?
+
+Common causes include memory limit too low, memory leak in application, sudden traffic spike, inefficient GC, or multiple pods competing for node memory.
+
+If you want next step, I can also give:
+👉 exact debugging flow (step-by-step like real SRE on-call)
+👉 or how to fix permanently (HPA, memory tuning, JVM tuning, etc.)
+
+How would you approach troubleshooting this issue step by step?
+How would you determine if the issue is with the pipeline itself vs the target environment?
+What tools or commands would you use to debug the failure in Kubernetes?
+How would you handle this situation if it is blocking a critical production release?
+
+Here are strong 1–2 line interview answers (SRE style):
+
+❓ How would you approach troubleshooting step by step?
+
+I first check pod status, events, and logs using kubectl describe/logs, then verify resource usage (CPU/memory), recent deployments, and node health. After that, I correlate metrics and identify whether it’s app, infra, or config related.
+
+❓ Pipeline issue vs target environment?
+
+If logs fail before deployment (build/test stages), it’s pipeline issue; if deployment succeeds but pods crash or misbehave, it’s target environment issue. I also verify artifacts, manifests, and rollout status to isolate the stage.
+
+❓ Tools/commands to debug in Kubernetes?
+
+I use kubectl get/describe pod, kubectl logs, kubectl top pod/node, kubectl get events, and check HPA/Ingress. For deep debugging, I use Prometheus/Grafana and node logs (dmesg, CloudWatch).
+
+❓ If it blocks a critical production release?
+
+I immediately trigger incident process, communicate impact, and decide rollback or hotfix. If needed, I stabilize using scaling, rollback, or feature flag disable while parallel RCA continues.
+
+If you want next level, I can also give:
+👉 “perfect real on-call incident story answer (very high scoring in interviews)”
+
+You are asked to design and implement monitoring & observability for this service using industry-standard tools.?
+Make sure 
+1. properly collect  metrics, logs, and traces.
+2. Provide dashboards and alerts.
+3. Ensure the solution is scalable, cost-efficient, and secure
+4. Integrate health checks and service-level indicators/alerting.
+❓ Observability Design (Interview Answer – SRE Style)
+
+I would design observability using metrics, logs, and traces (3 pillars) with a centralized stack like Prometheus + Grafana + Loki/ELK + OpenTelemetry + Alertmanager.
+
+1️⃣ Metrics, Logs, Traces Collection
+Metrics: Use Prometheus to scrape Kubernetes metrics (pods, nodes, app metrics via exporters).
+Logs: Use FluentBit/Fluentd to ship container logs to Loki or ELK.
+Traces: Use OpenTelemetry SDK to collect distributed traces and send to Jaeger/Tempo.
+2️⃣ Dashboards & Alerts
+Grafana dashboards for latency, error rate, traffic, CPU/memory, queue depth.
+Alertmanager for alerting based on SLO/SLA thresholds (like 5xx rate, high latency, pod restarts).
+Define alerts based on symptoms not causes.
+3️⃣ Scalability, Cost & Security
+Use namespace-based scraping + label filtering to reduce noise and cost.
+Store logs with retention policies and compression.
+Secure with RBAC, IAM roles, TLS encryption, and secret management (Vault/KMS).
+Use sampling for traces to control cost.
+4️⃣ Health Checks & SLI/SLO
+Kubernetes liveness/readiness probes for service health.
+Define SLIs like availability, latency, error rate.
+SLOs like “99.9% successful requests in 5 min window” with burn-rate alerts.
+⚡ Interview-ready summary:
+
+I would implement a full observability stack using Prometheus, Grafana, Loki/ELK, and OpenTelemetry to collect metrics, logs, and traces. I would define SLO-based alerts, build dashboards for service health, and ensure scalability using sampling, retention policies, and secure access controls.
+
+If you want next, I can give:
+👉 real architecture diagram explanation (how data flows end-to-end)
+👉 or interview “deep dive follow-up questions they will ask after this answer”
