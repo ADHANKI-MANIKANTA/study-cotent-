@@ -1,0 +1,43 @@
+Group: My tasks
+  • Task: Need revise ci/cd steps and previous interview queation revision
+  • Task: Need to complete AWS course 
+https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/13528014?start=15#overview
+  • Task: have to practie full project on AWS
+  • Task: have to learn how to write jenkin pipeline script.
+  • Task: have to learn how to write yml file for pods and cluster and node level for deployment
+  • Task: have to learn how to write terraform script for automating the infra
+  • Task: have to learn two automation scripting laguages 
+bash scripting 
+python scripting
+  • Task: have to build CICD project using jenkins and gitlab both,
+  • Task: need to deploy the microservice project on aws with microservice architecture
+  • Task: You master DevOps technologies and CI/CD practices (Git and Gitlab): System (bash, basic
+commands), Python, Ansible, Puppet, SQL queries.
+  • Task: need to learn ansible
+  • Task: for cicd pipeline need to learn maven commands that we mention in jenkin pipeline
+  • Task: need to write one ci jenkin script to write in interview
+  • Task: need to learn one gitlab ci.yml to write in interview.
+  • Task: need to learn basic yml file to write for deployment and service in Kubernetes.
+  • Task: need to learn kubernetes architecture with deep knowledge. need to watch tech world with nana
+  • Task: understand the application level how code logic works how rest api works how kafka works and, Java application how it works code logic if some one clink on ui how it code logic thinks
+  • Task: need to learn connection from vpc to s3 and application to db, in what way it works and also need to learn how to connect load balancer with rout53
+  • Task: need to prepare for the next interview based on the previous interview JD
+  • Task: need to learn Kubernetes commands and scenario based question
+  • Task: need to learn python with DSA
+
+Group: mistakes 
+  • Task: linux admin interview got the clarity that i am not that good at linux for admin position need to think more deep into linux in all perspectives
+  • Task: 1st - Not having deep knowledge in linux and SQL for troubleshooting, based on scenarios and production issues
+  • Task: 2nd - need to learn more depth in pods and kubernetes concepts how yml file works and how they write and mention everything.
+  • Task: 3rd need to learn and practice Kubernetes commands & scenario based questions and most important troubleshooting based on issue.
+  • Task: need to learn logging and monitoring options and features we have in aws
+
+Group: day task 
+  • Task: need revision of all concepts
+  • Task: repractice, cicd, gitlab.ci , yaml, shell scripting
+  • Task: change the approach to get calls
+
+
+
+
+
