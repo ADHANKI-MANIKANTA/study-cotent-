@@ -1,5 +1,3 @@
-
-
 ​**Helm** is a package manager for Kubernetes, designed to simplify the deployment and management of applications on a Kubernetes cluster. It provides a higher-level abstraction for managing Kubernetes resources, making it easier to define, install, and upgrade complex applications with many components.
 
 **Key components of Helm include:**
@@ -81,5 +79,3 @@ There are several types of Helm hooks, each designed to be executed at a specifi
 - **Pre-upgrade Hooks:** These are executed before an upgrade is performed, allowing you to perform tasks like backup or data migration before changing the application.
 - **Post-upgrade Hooks:** These are executed after an upgrade is complete.
 - **Pre-delete Hooks:** These are executed before a release is deleted, which can be useful for cleaning up resources.
-
-
