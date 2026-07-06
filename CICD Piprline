@@ -1,0 +1,56 @@
+pipeline {
+      agent any 
+  
+Enviroment veriable {
+
+image = "latest" 
+image-tag = "my-imeage" 
+docker repository = "docker.io/mydocker-hub_usernaem"
+kuberneties namespace = "my-app"
+helm release = "myapp release" 
+
+}
+
+stages {
+      stages('code checkout'){
+           steps{
+             git branch : "main" or "master"
+                    URL : https://github.com/your-repo.com
+              }
+          }
+ stages('code build'){
+           steps{
+             echo "building application"
+             sh 'mvn clean package -Dskiptest'             
+              }
+          }
+ stages('unit test'){
+           steps{
+             echo "unit testing ...."
+             sh 'mvn test'
+              }
+          }
+
+ stages('code scan'){
+           steps{
+             echo " code scanning with SonarQube"
+             sh '''
+                    mvn sonar:sonar \
+                    -Dsonar.projectKey=my-app \
+                    -Dsonar.host.url=http://sonarqube:9000 \
+                    -Dsonar.login=admin \
+                    -Dsonar.password=admin
+                '''
+              }
+          }
+     stage('unit test'){
+           steps{
+             echo "build docker image...."
+             sh 'docker build'
+             
+              withcredentionalEnv(credentionals(user_admin:userid,:user_passwerd:admingpass))
+
+              }
+          }
+
+ 
