@@ -1,0 +1,244 @@
+https://docs.kubermatic.com/kubermatic/v2.29/cheat-sheets/alerting-runbook/
+
+ 
+**AWS Notes**
+AWS, or Amazon Web Services, is a subsidiary of Amazon providing on-demand cloud computing platforms and APIs (Application Programming Interfaces) to individuals, businesses, and organizations. AWS offers a wide range of cloud computing services, including computing power, storage, databases, machine learning, analytics, content delivery, and more. These services are delivered through a global network of data centers, often referred to as "regions," located in various parts of the world.
+Here are some key components and services offered by AWS:
+**Amazon EC2 (Elastic Compute Cloud):** This service provides resizable virtual servers (known as instances) in the cloud. Users can choose from various instance types with different compute, memory, and storage capacities.
+**Amazon S3 (Simple Storage Service):** S3 is an object storage service that allows users to store and retrieve data and files in a highly scalable and durable manner. It is commonly used for data backup, file storage, and hosting static websites.
+**Amazon RDS (Relational Database Service):** RDS is a managed database service that makes it easier to set up, operate, and scale relational databases like MySQL, PostgreSQL, Oracle, and SQL Server in the cloud.
+**AWS Lambda:** Lambda is a serverless computing service that allows you to run code in response to events without managing servers. It's often used for building event-driven and microservices applications.
+**Amazon Sagemaker:** Sagemaker is a machine learning service that helps developers build, train, and deploy machine learning models easily.
+**Amazon VPC (Virtual Private Cloud):** VPC allows you to create isolated network environments within AWS, helping you control network settings, security, and communication between resources.
+**Amazon CloudFront:** CloudFront is a content delivery network (CDN) service that helps distribute content (such as web pages, videos, and images) to users with low latency and high data transfer speeds.
+**Amazon SNS (Simple Notification Service):** SNS is a messaging service that enables you to send messages or notifications to a distributed set of recipients via various communication protocols.
+**Amazon IAM (Identity and Access Management):** IAM is a service for managing user identities and access permissions to AWS resources securely.
+**AWS Elastic Beanstalk:** This platform-as-a-service (PaaS) offering simplifies the deployment and management of web applications and services.
+**Regions** - physical locations (22). Each region has atleast 2 AZ’s.
+**Availability Zones** - one or more discrete data centres (69)
+**Edge Locations** - data center owned by a trusted partners of AWS
+**CloudWatch** enables you to monitor your complete stack (applications, infrastructure, network, and services) and use alarms, logs, and events data to take automated actions and reduce mean time to resolution (MTTR). This frees up important resources and allows you to focus on building applications and business value.
+**AWS S3**
+**————————**
+- it is an object storage service used to store the data
+- File size can be 0bytes to 5 TB
+- Files are stored in Buckets
+- Bucket is a logical grouping of your file
+- Account -> Bucket -> Object(file) -> PUT Operation
+- Max 100 buckets per account
+**Storage Classes (JavaTpoint)**
+- S3 storage classes are used to assist the concurrent loss of data in one or two facilities.
+- S3 storage classes maintain the integrity of the data using checksums.
+- S3 provides lifecycle management for the automatic migration of objects for cost savings.
+- Storage classes are object level not bucket level.
+- Types: S3 Standard, Standard IA, One-zone IA, Reduced Redundancy Storage and Glacier
+**S3 Standard**
+- 99.99 Availability, means you can access whenever required
+- 99.9999% durability, means your data cannot lost
+- It is default storage class
+**Versioning**
+- Versioning is a means of keeping multiple variants of an object in the same bucket. You can use versioning to preserve, retrieve, and restore every version of every object stored in your Amazon S3 bucket. With versioning, you can easily recover from both unintended user actions and application failures
+- by enabling versioning you can upload or store multiple versions of the same file in a single folder.
+- It doesn’t remove the previous file even if they are with the same name.
+- you cannot disable versioning, you can just suspend it.
+**Logging**
+- Server access logging provides log records it contains who all are sending access requests to your bucket and details about those requests. These are at server level.
+- Object level logging records the object level API activity using CloudTrail data events feature.
+- **CloudTrail** is a web service that monitors API activities on your services.
+- prefix also known as folders.
+- For event notification we can use SNS service.
+**Security Measures**
+- You can secure your bucket or data using Access Control List or Bucket Policies.
+- CORS is cross origin resource service mainly used for web application developers
+**Static Website Hosting**
+- it allows to host a static website which doesn't require server side technologies by enabling in the Properties section of a bucket.
+**Encryption**
+- AES 256 or AWS-KMS
+**AWS IAM**
+**———————**
+- it is a global service used to secure our resources by managing identity and access management.
+- only root user has the access to add or delete or modify the resources in the AWS account.
+**Users**
+- You can add multiple users to single account. Add user and give access type like Programmatic access and AWS Management Console access.
+- Programmatic access helps to use AWS services from command line interface using access Key ID and Secret access key.
+- You can give limited access to any iam user by disabling Programmatic access permissions(non admin user)
+**Group**
+- used to create a group with certain access permissions or policies like EC2FullAccess/ S3FullAccess etc.
+- All the policies of the group directly attached to the user after adding into the group.
+**Accessing AWS Resources**
+**_________________________**
+- You can access AWS services using 3ways:
+- 1. By using Command Line Interface (CLI) tool.
+- 2. By using Software Development Kits(SDK).
+- 3. Creating and modifying aws resources using Cloud Formation Templates.
+**AWS EC2 Service**
+**__________________**
+- it is our virtual machine or server on the cloud.
+- provides resizable virtual servers also known as instances.
+- It makes scaling of capacity up and down easy
+**Instance Types**
+- **t2.micro** is given for free tier account with 1GB storage and EBS volume.
+**1.General Purpose:**
+**T2 Instances:** Low-cost, burstable performance for general-purpose workloads.
+**Example:** Development, testing, small web applications.
+**T3 Instances:** Burstable performance with a baseline level of CPU performance.
+**Example:** Microservices, small web apps, development environments.
+**2.Compute Optimized:**
+**C5 Instances:** Compute-optimized instances with high CPU performance.
+**Example:** Batch processing, high-performance computing (HPC), data analytics.
+**3.Memory Optimized:**
+**R5 Instances:** Memory-optimized instances with high RAM-to-CPU ratio.
+**Example:** In-memory databases, big data analytics, data caching.
+**X1 Instances:** Memory-optimized instances with massive RAM capacity.
+**Example:** In-memory databases, SAP HANA, in-memory analytics.
+**4.Storage Optimized:**
+**I3 Instances:** High-performance instances with local NVMe SSD storage optimized for I/O-intensive applications.
+**Example:** NoSQL databases, data warehousing, real-time analytics.
+**D3 Instances:**  Storage-optimized instances with high disk throughput.
+**Example:** Big data processing, data warehousing, data lakes.
+**H1 Instances:** Dense storage-optimized instances for large-scale data processing.
+**Example:** Big data analytics, distributed file systems.
+**5.Specialized Compute:**
+**P3 Instances:** Accelerated computing with powerful GPUs for machine learning, deep learning, and HPC.
+**Example:** Machine learning training, scientific simulations.
+**G4 Instances:**  GPU instances optimized for graphics-intensive applications and machine learning.
+**Example:** Video encoding, 3D rendering, AI inferencing.
+**F1 Instances:** FPGA (Field-Programmable Gate Array) instances for customizable hardware acceleration.
+**Example:** Custom hardware acceleration for specialized workloads.
+**Z1d Instances:** High-frequency CPU instances with fast single-threaded performance.
+**Example:** Gaming servers, electronic design automation.
+**Security Groups:**
+It is like a virtual firewall.
+- **Inbound rule :** it defines the traffic from which source is allowed to the system and from which port and protocol.
+- **Outbound rule:** it defines what kind of traffic should go out of the system and to where. And using which port and protocol to go out of the system/instance.
+**Amazon Machine Images (AMI)**
+**_______________________________**
+- it is template which have all information to launch a virtual server or ec2 instance.
+- AMI mainly used to create backup and clone of servers. And also used to migrate on premise servers to the cloud.
+- It minimise the duplicated tasks.
+**Elastic Block Storage (EBS)**
+**——————————————**
+- EBS are the storage volumes that can be attached to Amazon EC2 instance.
+- It can attach to only one instance at a time.
+- File systems and databases can be installed on these storage.
+- It protects data from external disk failures within the availability zone.
+- To attach to multiple instances at a time you can use Elastic File Storage.
+- **Types:**
+- 1. General Purpose SSD (gp2)
+- 2. Provisioned IOPS SSD (io1)
+- 3. Throughout Optimized HDD (st1)
+- 4. Cold HDD (sc1)
+**Snapshot**
+**——————**
+- snapshots are the one time copy or backup files of EBS volumes.
+- We can create snapshot from volumes and we can delete volume but snapshot remains safe and then we can again create volume from snapshot.
+- Volumes are created within the availability zone where as snapshots are create within regions.
+**AutoScaling**
+**————————**
+- AWS Auto Scaling monitors your applications and automatically adjusts capacity to maintain steady, predictable performance at the lowest possible cost.
+- **Horizontal scaling or scale out :** creating multiple instances/servers if there is more load and demand of the same type.
+- **Vertical scaling or scale up:** when there is more load or demand then upgrade the capability of the system like increasing RAM, Core CPU etc.
+**Elastic Load Balancer**
+**————————————**
+- It takes the request from the client and distributes the load or traffic across multiple instances/servers within the region.
+**Types of ELB:**
+**1.Application Load Balancer (ALB):** ALB operates at the application layer (Layer 7) of the OSI model, making routing decisions based on content, such as HTTP/HTTPS headers and URLs.
+**Advanced Routing:** ALB supports features like host-based routing, path-based routing, and redirect actions.
+**Target Groups:** ALB routes traffic to target groups, allowing you to define sets of instances or services to distribute traffic among.
+**Use Cases:** ALB is suitable for web applications and microservices architectures, where you need advanced routing and content-based routing decisions.
+**2.Network Load Balancer (NLB):** NLB operates at the transport layer (Layer 4) and forwards traffic based on IP protocol data. **High Throughput and Low Latency:** NLB is designed for high-throughput, low-latency applications and is often used for TCP and UDP-based workloads.
+**Static IP:** NLB provides a static IP address that remains the same over time.
+**Use Cases:** NLB is ideal for applications that require extreme performance, such as gaming, real-time communication, and IoT.
+**3.Classic Load Balancer (CLB):** CLB is the oldest type of ELB in AWS and provides basic load balancing capabilities. Layer 4 and Layer 7: CLB supports both Layer 4 (TCP/UDP) and Layer 7 (HTTP/HTTPS) load balancing.
+**Basic Routing:** It offers basic request routing based on IP addresses and ports using SSL.
+**Use Cases:** While CLB is still supported, it's recommended to use ALB or NLB for new applications due to their advanced features and better performance.
+**4.Gateway Load Balancer:** Choose a Gateway Load Balancer when you need to deploy and manage a fleet of third-party virtual appliances that support GENEVE. These appliances enable you to improve security, compliance, and policy controls.
+**AWS VPC**
+**——————**
+- Its a secure and isolated network environment within the aws account.
+- There cab be more than one VPC per account.
+- VPC is specific to single Region.
+- Subnets are group of IPs in your VPC.
+- Subnet resides within a single availability zone.
+- CIDR block defines the IP addresses that resources in the VPC can use.
+**Containers**
+**——————**
+- containers are the standalone executable package that contains everything that require to run an application including files, libraries and dependencies etc.
+- container orchestrators deploy, manage and scale containerized applications.
+- container orchestrators are the brains of the containerized environments. They deploy containers across all available servers and load balancing requests to containers. Restarting failed containers.
+- Popular container orchestrators are Kubernetes, Apache Mesos and ECS
+**Elastic Container Service (ECS)**
+**—————————————————**
+- ECS is a fully managed container orchestration service that manages and scale containerized applications.
+- ECS is managed by AWS and containers run on EC2 instances.
+**Kubernetes**
+**———————**
+- It is a open source container orchestrator.
+- Kubernetes cluster has two nodes : control plane nodes and worker nodes.
+- **AWS EKS** is AWS Elastic Kubernetes Service, it manages control plane nodes for you but users have to manage worker nodes.
+**AWS Databases**
+**—————————**
+- Databases are the applications that store the data. Types:
+- 1. Self-Managed Datastores
+- 2. SQL Datastores
+- 3. NoSQL Datastores
+SQL Database services - RDS, Aurora, Redshift (server & server less)
+NoSQL Database services -
+- DynamoDB : fast key value at aws.
+- DocumentDB( With MongoDB comparability : used to retrieve data like essay and files.
+- Keyspaces ( for Apache Cassandra): can run database in many different locations.
+- Neptune : detect relationships between data like fraud detection or social network relationships.
+- ElastiCache : it provides 2 in-memory database services.
+- Timestream : captures data from various sources at high scale and maintain timestamp.
+- Redshift is a data warehouse
+**Application Integration**
+**—————————————**
+- Its used to manipulate the traffic or the communication between applications.
+- Uses SNS, SQS, Autoscaling and Elastic load balancer.
+- **SQS:** used when you want to send a message to millions of users but you have only 1000’s of backends, so you queued all the messages and processes one by one.
+- SNS duplicates the messages but SQS controls the flow of the messages.
+**Application Integration - Other services**
+There are many other services that don't need deep coverage
+- **Amazon AppFlow :** Solves the problem of copying data from 3rd parties like Salesforce into AWS.
+- **Amazon EventBridge :** Acts like a post office for coordinating events across applications.
+- **Amazon MQ :** Managed Queue is exactly like SQS, but using open-source software instead of AWS proprietary.
+- **Amazon Step Functions :**Solves the problem of how do I organize my serverless functions so they can work like a full application.
+**AWS OpsWorks-** It’s used to install specific software into your servers.
+**Migration and Transfer**
+**————————————**
+- Migration Hub allows you to centralize and see all migration you have in place via aws services.
+**Migration Strategies (6)**
+- **Rehosting (Lift-and-Shift) :** simply move application/server to aws cloud without any change.
+- **Replatforming (Lift, Tinker, and Shift) :** migrate with minute changes like OS, Platform etc.
+- **Refactoring (or Rearchitecting)**
+- **Repurchasing**
+- **Retaining (Do Nothing)**
+- **Retiring**
+**AWS Snowball -** Its a petabyte-scale data transfers into and out of the cloud.
+- AWS FTP, AS2, DataSync used to move applications to aws cloud online.
+**Security Resources - Detection - Summary**
+- **GuardDuty:** monitors and detects suspicious activity and potential threats in your AWS environment
+- **Detective:** helps analyze and investigate security-related events by collecting and visualizing data
+- **CloudTrail:** logs and monitors all user and API activity within an AWS account
+- **AWS Config:** tracks and audits the configuration of AWS resources over time
+- **Security Hub:** automates security checks and brings alerts to a central location. Also performs validation on AWS best practices
+- **Security Lake:** collects logs from a variety of locations and transforms them into a query-efficient format
+- **AWS Macie:** scans S3 buckets for sensitive data and notifies users of findings.
+**Networking - Summary**
+- Subnets can be made public/private using Internet Gateways & Nat Gateways.
+- I**nternet Gateways** allow subnets to communicate with internet & vice versa.
+- **NAT Gateways** allow subnets to talk to the internet but connections must be initiated from within the VPC.
+- **Virtual Private Gateway** enable secure access to private resources over the internet.
+- **Direct Connect(DX)** is a direct connection into an aws regions that provide low latency + high speeds
+**AWS CLI Interaction to S3**
+**——————————————**
+- To list all the available buckets you can use : **aws s3 ls**
+- To create a new bucket : **aws s3 mb s3://bucket-name**
+- To delete the bucket : **aws s3 rb s3://bucket-name**
+- To delete the bucket including files : **aws s3 rb s3://bucket-name -force**
+- To set permissions while copying the files : **aws s3 cp /Users/Chitti.t/file s3://bucket-name —recursive —acl public-read**
+- To copy files from local to S3 bucket : **aws s3 cp local-path s3://bucket-name**
+**AWS CLI Interaction to IAM**
+**——————————————**
+- To list all the users : **aws iam list-users**
+ 
