@@ -1,0 +1,358 @@
+Here are some commonly used Maven commands:
+
+mvn clean:    Removes the target directory and all generated files.
+mvn compile:  Compiles the source code.
+mvn test:     Runs the unit tests.
+mvn package:  Compiles, tests, and packages the code into a JAR or WAR.
+mvn install:  Packages and installs the artifact into the local repository.
+mvn deploy:   Deploys the artifact to a remote repository.
+mvn dependency:tree:          Shows the dependency tree.
+mvn dependency:analyze:       Analyzes dependencies for unused or declared but unused ones.
+mvn site:                     Generates project documentation.
+mvn archetype:generate:       Generates a new project from an archetype.
+
+
+For multi-module projects, you can run these with -pl <module> to target specific modules or -am to also build dependencies. Use -DskipTests to skip tests during builds.
+
+
+
+
+Build Stage:
+
+Node.js: npm install, npm run build
+Maven/Java: mvn clean compile, mvn clean package
+Python: pip install -r requirements.txt, python setup.py build
+General: Install dependencies and compile code.
+
+
+Test Stage:
+
+Node.js: npm test, npm run test:unit
+Maven/Java: mvn test, mvn verify
+Python: pytest, python -m unittest
+General: Run unit/integration tests, linting (e.g., eslint . for JS).
+
+
+Package Stage:
+
+Docker: docker build -t $IMAGE_NAME ., docker push $IMAGE_NAME
+Maven/Java: mvn package (already in build), or mvn deploy for artifacts
+Node.js: npm pack for tarballs
+General: Create deployable artifacts (JARs, images, etc.).
+
+
+Deploy Stage:
+
+Kubernetes: kubectl apply -f deployment.yaml, helm upgrade
+Docker: docker run -d, docker-compose up
+Cloud: aws deploy, gcloud app deploy
+General: Push to registries, update services, run migrations.
+
+
+
+
+
+
+
+
+
+
+kubectl commands
+
+
+kubectl get nodes
+kubectl get pod
+kubectl get services
+kubectl create deployment nginx-depl --image=nginx
+kubectl get deployment
+kubectl get replicaset
+kubectl edit deployment nginx-depl
+
+debugging
+
+kubectl logs {pod-name}
+kubectl exec -it {pod-name} -- bin/bash
+create mongo deployment
+kubectl create deployment mongo-depl --image=mongo
+kubectl logs mongo-depl-{pod-name}
+kubectl describe pod mongo-depl-{pod-name}
+delete deployment
+kubectl delete deployment mongo-depl
+kubectl delete deployment nginx-depl
+
+create or edit config file
+
+vim nginx-deployment.yaml
+kubectl apply -f nginx-deployment.yaml
+kubectl get pod
+kubectl get deployment
+
+delete with config
+
+kubectl delete -f nginx-deployment.yaml
+#Metrics
+kubectl top The kubectl top command returns current CPU and memory usage for a cluster’s pods or nodes, or for a particular pod or node if specified.
+
+
+kubectl get svc kubernetes -o yaml , to view the svc file in terming in yaml formate
+
+
+
+kubectl get all,configmaps,secrets,pvc -n <namespace> to check what is in namespaces in side
+
+
+kubectl config set-context --current --namespace=dev, to change one name space ot another
+
+kubectl config set-context --current --namespace=prod, to switch to another namae space
+
+Check Current Namespace
+kubectl config view --minify | grep namespace
+or
+kubectl config get-contexts
+
+
+4. Temporary Usage (Without Switching)
+If you don’t want to switch permanently:
+kubectl get pods -n dev
+
+Real DevOps Usage Scenario
+
+When node is overloaded:
+
+kubectl describe node <node>
+kubectl top node <node>
+kubectl get pods -A --field-selector spec.nodeName=<node>
+
+👉 Then:
+
+Identify high CPU pods
+Check logs
+Reschedule or scale
+
+
+Get Pods from Only One Namespace on Node
+kubectl get pods -n dev -o wide | grep <node-name>
+
+Check Resource Usage (Important for SRE)
+kubectl top node <node-name>
+✔️ Helps you understand:
+CPU usage
+Memory usage
+Describe Node (Quick Overview)
+kubectl describe node <node-name>
+✔️ Shows:
+Allocated resources
+Running pods list
+CPU/Memory usage
+---
+Cluster & Context Commands
+kubectl cluster-info
+kubectl version
+kubectl config view
+kubectl config get-contexts
+kubectl config use-context <context-name>
+📦 2. Pod Commands (MOST IMPORTANT)
+kubectl get pods
+kubectl get pods -A
+kubectl get pods -o wide
+kubectl describe pod <pod-name>
+kubectl logs <pod-name>
+kubectl logs -f <pod-name>   # live logs
+kubectl exec -it <pod-name> -- /bin/bash
+kubectl delete pod <pod-name>
+
+👉 Debugging pod:
+
+kubectl get pod <pod> -o yaml
+kubectl describe pod <pod>
+🚀 3. Deployment Commands
+kubectl get deployments
+kubectl create deployment nginx --image=nginx
+kubectl apply -f deployment.yaml
+kubectl delete deployment <name>
+
+kubectl scale deployment <name> --replicas=3
+kubectl rollout status deployment <name>
+kubectl rollout history deployment <name>
+kubectl rollout undo deployment <name>
+
+👉 Update image:
+
+kubectl set image deployment/<name> nginx=nginx:latest
+🌐 4. Service Commands
+kubectl get svc
+kubectl describe svc <name>
+kubectl expose deployment <name> --type=NodePort --port=80
+kubectl delete svc <name>
+🔁 5. ReplicaSet Commands
+kubectl get rs
+kubectl describe rs <name>
+kubectl delete rs <name>
+📂 6. Namespace Commands
+kubectl get ns
+kubectl create ns dev
+kubectl delete ns dev
+kubectl config set-context --current --namespace=dev
+📊 7. Node Commands
+kubectl get nodes
+kubectl describe node <node-name>
+kubectl cordon <node>        # mark unschedulable
+kubectl uncordon <node>
+kubectl drain <node>         # remove pods safely
+🔐 8. ConfigMap & Secrets
+kubectl get configmaps
+kubectl create configmap my-config --from-literal=key=value
+kubectl describe configmap my-config
+
+kubectl get secrets
+kubectl create secret generic my-secret --from-literal=password=1234
+kubectl describe secret my-secret
+📦 9. YAML Apply & Delete (DAY-TO-DAY)
+kubectl apply -f file.yaml
+kubectl delete -f file.yaml
+kubectl create -f file.yaml
+
+👉 Dry run:
+
+kubectl apply -f file.yaml --dry-run=client
+🔍 10. Debugging & Troubleshooting (VERY IMPORTANT 🔥)
+kubectl describe pod <pod>
+kubectl logs <pod>
+kubectl logs <pod> -c <container>
+
+kubectl get events
+kubectl top pod
+kubectl top node
+
+👉 Check resource usage (Metrics Server needed):
+
+kubectl top pods
+🔗 11. Networking Commands
+kubectl get ingress
+kubectl describe ingress <name>
+
+kubectl port-forward pod/<pod> 8080:80
+📈 12. HPA (Auto Scaling)
+kubectl get hpa
+kubectl autoscale deployment <name> --cpu-percent=50 --min=1 --max=5
+kubectl describe hpa <name>
+🧠 13. Advanced (DevOps Real Work)
+kubectl get all
+kubectl get all -A
+
+kubectl edit deployment <name>
+kubectl patch deployment <name> -p '{"spec":{"replicas":2}}'
+
+kubectl label pod <pod> env=prod
+kubectl annotate pod <pod> team=devops
+🧹 14. Cleanup Commands
+kubectl delete pod --all
+kubectl delete all --all
+📜 15. Output Formatting
+kubectl get pods -o yaml
+kubectl get pods -o json
+kubectl get pods -o wide
+⚡ 16. Shortcuts (VERY USEFUL)
+kubectl get po        # pods
+kubectl get svc       # services
+kubectl get deploy    # deployments
+kubectl get ns        # namespaces
+🔥 REAL DEVOPS SCENARIO COMMANDS
+
+👉 Restart deployment:
+
+kubectl rollout restart deployment <name>
+
+👉 Check failing pod quickly:
+
+kubectl describe pod <pod>
+kubectl logs <pod>
+
+👉 Exec into container:
+
+kubectl exec -it <pod> -- sh
+🚀 PRO TIPS (Interview + Job)
+Always start debugging with:
+kubectl get pods
+kubectl describe pod
+kubectl logs
+Most used in real job:
+logs
+describe
+exec
+get (with -o wide)
+
+
+
+
+
+
+cluster auto scaling( carpenter)
+
+launch template 
+
+
+
+how to onboard any namespace in k8s
+
+
+pvc's
+
+how to create node group
+how to create cluster or namespace.
+
+resources allowcation testing 
+failover testing 
+
+loadbalancer stratagies 
+equal distribution 
+Waite based routing 
+round robin 
+
+
+tints and tolarations
+
+Where can we check if a node is not coming up and the reason?
+cns or ip issue cni pod
+
+kubectl commands
+kubectl get nodes
+kubectl get pod
+kubectl get services
+kubectl create deployment nginx-depl --image=nginx
+kubectl get deployment
+kubectl get replicaset
+kubectl edit deployment nginx-depl
+debugging
+kubectl logs {pod-name}
+kubectl exec -it {pod-name} -- bin/bash
+create mongo deployment
+kubectl create deployment mongo-depl --image=mongo
+kubectl logs mongo-depl-{pod-name}
+kubectl describe pod mongo-depl-{pod-name}
+delete deployment
+kubectl delete deployment mongo-depl
+kubectl delete deployment nginx-depl
+create or edit config file
+vim nginx-deployment.yaml
+kubectl apply -f nginx-deployment.yaml
+kubectl get pod
+kubectl get deployment
+delete with config
+kubectl delete -f nginx-deployment.yaml
+#Metrics
+kubectl top The kubectl top command returns current CPU and memory usage for a cluster’s pods or nodes, or for a particular pod or node if specified.
+ 
+Master node
+ 
+API Server → receives request
+Scheduler → assigns node
+Controller → maintains state
+etcd → stores everything
+ 
+worker node
+Kubelet → manages pods
+Container runtime → runs containers
+Kube-proxy → networking
+ 
+
