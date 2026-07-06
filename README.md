@@ -1,4 +1,7 @@
 # study-cotent-
+
+linux -> Docker -> Kubernetes -> Jenkins/Grafana/Prometheus
+
 study-cotent  for future reference 
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/c82203ba-876b-471c-8120-cbef84c28250" />
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/59aa656c-733e-42c5-909b-d64853e19abf" />
