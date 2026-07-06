@@ -1,0 +1,33 @@
+git branch - to check the branches and to check we are in which branch
+
+git branch -b leopolo - to create new branch after coloning any branch from master branch.
+
+git checkout -b leopolo- this command also we use to create branch after creating we can directly checkout the same branch.
+
+git status - to check any commits are in pending 
+
+git add.- to add all the changes local repository 
+
+git add filename - to add single file changes 
+git status - after adding to see which changes are ready for commit 
+git checkout-
+
+git commit -m "testign" - to commit changes to repository 
+git log - to check the commit history and logs 
+git log --oneline - to check log in oneline
+git log --oneline --graph - to check log in graph format in Realtime project.
+git push --set-upstream origin leopolo - to push the changes to remot repository, the one which we created the branch 
+
+
+
+echo "# dockerdemo" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/ADHANKI-MANIKANTA/dockerdemo.git
+git push -u origin main
+…or push an existing repository from the command line
+git remote add origin https://github.com/ADHANKI-MANIKANTA/dockerdemo.git
+git branch -M main
+git push -u origin main
