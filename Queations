@@ -9,3 +9,31 @@
 5} we have an e-com application with microservice and checkout service is failing continued and getting alerts and mails from client , it having high spike count lik 10milion requests so how do truble shoot ? what are yoru first 5 steps do you take first action on that if that is not infra isssue it is appliaction issue ? if fix takes more time still service is down how do handel and what you will do.
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Recently, I had a great DevOps interview experience with the Samsung company. Here are some of the interview questions I faced:
+
+1. Tell me about your experience.
+2. What feature have you developed in an application as a DevOps Engineer in a previous organization?
+3. How can you automate errors using shell scripting, such as a 404 error?
+4. What are basic shell scripting commands?
+5. How can you check the logs using shell scripting?
+6. Explain your pipeline.
+7. What is error handling in a Jenkins pipeline?
+8. What kind of scripting is used for the pipeline? Explain scripting.
+9. What kind of pipeline did you write, and how do you check the error logs?
+10. Explain how you implement date and time in shell scripting.
