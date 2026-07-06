@@ -1,0 +1,540 @@
+https://kubernetes.io/docs/reference/kubectl/cheatsheet/
+
+**Kubernetes** is a free software system or orchestration tool used to automate the deployment, management and scaling of containerized applications across the cluster of nodes.
+
+**Node:** Its a virtual or physical machine where the kubernetes is installed or containers will run.
+
+**Cluster:** Its a set of nodes grouped together
+
+**Kubernetes Architecture**
+
+- Master Nodes (Manage,Plan,Schedule,Monitor Nodes)
+- **ETCD:** it stores information about the cluster.
+- **Kube-scheduler:** responsible for scheduling the applications or containers on nodes.
+- **Kube-apiserver:** responsible for orchestrating all the operations within the server.
+- Worker Nodes (Host Applications as Containers)
+- **Kubelet:** It listens the instructions from the kube-apiserver and manages the containers.It is an agent that runs on each node in the kubernetes cluster.
+- **Kube-proxy:** helps in enabling communication between services within the cluster.
+
+**ContainerD**
+
+- It is standard container runtime which can manage container lifecycle of its host system.
+
+**CRI(Container Runtime Interface):** defines how kubernetes interacts with runtimes like docker/rkt/cri-o
+
+- ctr
+- nerdctl
+- crictl
+
+ETCDCTL is the CLI tool used to interact with ETCD
+
+**etcd** (etcdctl)- run on default port is 2379.
+
+To install any component like Kube API server or any use this command :   **wget url-name**
+
+**To view kube controllers:** kubectl get pods -n Kube-system
+
+**kubectl:** It is used to deploy a docker container by creating the pods (kubectl run nginx —image nginx)
+
+**kubectl get pods:** command used to list pods
+
+**kubectl get replicaset** - to list the no of replicas.
+
+**Replicaset** - used to identify no of pod replicas running at given time.
+
+**kubectl describe pods &  kubectl describe replicates** - used to view detailed info like image details etc.
+
+**vi /root/replicaset-definition.yaml** - to open and edit yam file
+
+**kubectl create -f /root/replicaset-definition.yaml** - used to create a replicaset
+
+**Deployment** is an abstraction of pods. we cannot create replica for database pods because of inconsistency
+
+**StatefulSet** used for creating stateful applications like database applications
+
+**Imperative Commands**
+
+**Create Objects**
+
+> kubectl run --image-nginx nginx
+
+> kubectl create deployment --image-nginx nginx
+
+> kubectl expose deployment nginx --port 80
+
+**Update Objects**
+
+> kubectl edit deployment nginx
+
+> kubectl scale deployment nginx --replicas=5
+
+> kubectl set image deployment nginx nginx-nginx:1.18
+
+**Services structure**
+
+apiVersion: v1
+
+kind: service
+
+metadata:
+
+name: frontend
+
+spec:
+
+selector:
+
+app: frontend
+
+type: NodePort
+
+ports:
+
+-name: http
+
+port: 80
+
+targetPort: 8080
+
+**Lables & Selectors** - are used to store and filter the data in key-value format.
+
+Ex: kubectl get pods --selector env=dev
+
+**Annotations-** used to record other details for informative purpose.
+
+**Taints and Tolerations**
+
+Taints and tolerations are a mechanism that allows you to ensure that pods are not placed on inappropriate nodes. Taints are added to nodes, while tolerations are defined in the pod specification. When you taint a node, it will repel all the pods except those that have a toleration for that taint. A node can have one or many taints associated with it.
+
+A taint can produce three possible effects:
+
+**NoSchedule:**
+
+The Kubernetes scheduler will only allow scheduling pods that have tolerations for the tainted nodes.
+
+**PreferNoSchedule:**
+
+The Kubernetes scheduler will try to avoid scheduling pods that don’t have tolerations for the tainted nodes.
+
+**NoExecute:**
+
+Kubernetes will evict the running pods from the nodes if the pods don’t have tolerations for the tainted nodes.
+
+**Node Selector & Affinity:** used to place right pod to the right node like placing large pod to the large node only etc.
+
+A **DaemonSet** ensures that all (or some) Nodes run a copy of a Pod. As nodes are added to the cluster, Pods are added to them. As nodes are removed from the cluster, those Pods are garbage collected. Deleting a DaemonSet will clean up the Pods it created.
+
+**Static Pods:** These are the pods which are created by the kubelet without any instructions from kubeapi server help or any other Kubernetes components. It’s always stored in the kubernetes manifests file location.
+
+**Monitoring**
+
+- Used to identify the metrics of all the nodes in the cluster like cpu,memory usage etc.
+- Tools like: Metrics Sever, Prometheus, Elastic Stack, DataDog, DynaTrace
+
+**Rolling Updates and Rollbacks**
+
+**Summarize Commands**
+
+**Create >** kubectl create -f deployment-definition.yml
+
+**Get >** kubectl get deployments
+
+**Update >** kubectl apply -f deployment-definition.yml
+
+**>** kubectl set image deployment/myapp-deployment nginx-nginx:1.9.1
+
+**Status >** kubectl rollout status deployment/myapp-deployment
+
+**>** kubectl rollout history deployment/myapp-deployment
+
+**Rollback >** kubectl rollout undo deployment/myapp-deployment
+
+**ConfigMap Commands**
+
+- Configmaps stores data of configuration files like database urls in plain text key value pairs.
+- create configmap and inject into pod
+
+**get-** Kubectl get configmaps
+
+**create-** kubectl create configmap  webapp-config-map --from-literal=APP_COLOR=darkblue --from-literal=APP_OTHER=disregard
+
+**Modify & Update existing pod-** kubectl replace --force -f /tmp/kubectl-edit-1494955234.yaml
+
+**Secrets**
+
+- Secrets are used to store sensitive data like passwords etc. Similar as configmaps but secrets store data in encoded format.
+
+**get-** kubectl get secrets
+
+**Create-** kubectl create secret generic sec-name —from-literal=key=value
+
+**To view detail-** kubectl get secret secret-name -o yaml
+
+**Encrypt-** echo -n ‘chintu’ | base64
+
+**Decrypt-** echo -n ‘dlbw=‘ | base64 —decode
+
+- To inject configmaps or secrets into pod definition yaml file you need to specify in the spec section with **envFrom/configMapRef or envFrom/secretRef**
+
+**In Kubernetes, "drain," "cordon," and "uncordon" are commands and operations used to manage the availability of nodes in your cluster, typically in the context of maintenance or node scaling.**
+
+**Cordon:**
+
+The kubectl cordon command is used to mark a node as unschedulable. When a node is cordoned, the Kubernetes scheduler will not place new pods on that node.
+
+This is often used as a preparatory step before performing maintenance on a node or draining it to safely remove pods.
+
+Example:
+
+**kubectl cordon <node-name>**
+
+**Drain:**
+
+The kubectl drain command is used to gracefully evict all the pods from a node. It cordons the node first to prevent new pods from being scheduled, and then it proceeds to evict the existing pods. The evictions are typically handled gracefully by the Kubernetes control plane.
+
+Example:
+
+**kubectl drain <node-name>**
+
+**Uncordon:**
+
+The kubectl uncordon command is used to make a previously cordoned node schedulable again. This is often done after maintenance on the node is complete and you want to allow new pods to be scheduled on it.
+
+Example:
+
+**kubectl uncordon <node-name>**
+
+**Here's a typical sequence for node maintenance:**
+
+Cordon the node to prevent new pod scheduling:
+
+kubectl cordon <node-name>
+
+Drain the node to gracefully evict existing pods:
+
+kubectl drain <node-name>
+
+Perform maintenance or scaling operations on the node.
+
+Uncordon the node to allow new pod scheduling again:
+
+kubectl uncordon <node-name>
+
+These operations are essential for ensuring the reliability and availability of your Kubernetes cluster when performing maintenance tasks on individual nodes.
+
+**Authentication**
+
+—————————
+
+- Kube-apiserver is responsible for authenticating users(admins & developers) while accessing any Applications or clusters.
+- Different Mechanisms like Static Password file, Static Token file, Certificates and Identity services.
+- **Certificate:** It is used to guarantee the trust between users during the transaction
+
+**How to create TLS Certificate:**
+
+- Easyrsa, openssl, cfssl
+
+**To view configuring details, CA details etc run this command:**
+
+openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text
+
+**To view certificate details run this command:**
+
+cat /etc/kubernetes/manifests/kube-apiserver.yaml
+
+**To approve or reject CSR:**
+
+kubectl certificate approve/deny csr-name
+
+**To delte CSR request:**
+
+kubectl delete csr agent-smith
+
+—> KubeConfig
+
+- It mainly contains clusters, contexts, users. Contexts manages users to access the clusters.
+- **kubectl config -h** gives all commands
+
+To use that context, run the command: `kubectl config --kubeconfig=/root/my-kube-config use-context research`To know the current context, run the command: `kubectl config --kubeconfig=/root/my-kube-config current-context`
+
+**`API’s responsible for cluster maintenance:`**
+
+`1.core: pods, namespaces,rc,pv,pvc,nodes,endpoints etc.`
+
+`2.named: storage, networking,authentication`
+
+**`Authorization`**
+
+- It helps to restrict users to their own namespaces.
+- Difference mechanisms like Node, Attribute based(ABAC), Role based(RBAC) and Webhooks.
+- Admission webhooks are HTTP callbacks that receive admission requests and do something with them. You can define two types of admission webhooks, validating admission webhook and mutating admission webhook. Mutating admission webhooks are invoked first, and can modify objects sent to the API server to enforce custom defaults. After all object modifications are complete, and after the incoming object is validated by the API server, validating admission webhooks are invoked and can reject requests to enforce custom policies.
+- Role-based access control (RBAC) is a method of regulating access to computer or network resources based on the roles of individual users within your organization.
+- To create a Role:- `kubectl create role developer --namespace=default --verb=list,create,delete --resource=pods`To create a RoleBinding:- `kubectl create rolebinding dev-user-binding --namespace=default --role=developer --user=dev-user`
+
+`Roles & RoleBindings are used to give access to users for services within namespace`
+
+`Cluster & ClusterBindings are used to provide access to users at cluster level.`
+
+**Security Context**
+
+- Security can be applied at pod level or container level.
+- To provide security to any pod just add securityContext section in the spec section in yaml file.
+- securityContext:
+- runAsUser=1001. like this
+- To provide security to container just move this securityContext section to containers section in yaml file.
+- Capabilities can be specified only for containers not pods
+
+**Network Polices**
+
+**Ingress-** Incoming traffic from users to the app server
+
+**Egress-** Outgoing request to the app server
+
+**Kubectx:**
+
+With this tool, you don’t have to make use of lengthy “kubectl config” commands to switch between contexts. This tool is particularly useful to switch context between clusters in a multi-cluster environment.
+
+**Syntax:**
+
+To list all contexts:
+
+kubectx
+
+To switch to a new context:
+
+kubectx
+
+To switch back to the previous context:
+
+kubectx –
+
+To see the current context:
+
+kubectx -c
+
+**Kubens:**
+
+This tool allows users to switch between namespaces quickly with a simple command.
+
+**Syntax:**
+
+To switch to a new namespace:
+
+kubens
+
+To switch back to previous namespace:
+
+kubens –
+
+**Volumes:**
+
+A volume in Kubernetes is a directory, possibly with some data in it, that is accessible to a container in a pod. Volumes can be used to share data between containers in the same pod or to persist data across the lifecycle of pods. There are various types of volumes available in Kubernetes, including:
+
+- **EmptyDir:** An empty directory is created when a pod is assigned to a node and is deleted when the pod is removed. It's used for ephemeral storage.
+- **HostPath:** A volume that mounts a file or directory from the host node's filesystem into the pod.
+
+**Persistent Volumes (PV):**
+
+A Persistent Volume (PV) is a piece of storage in the cluster that has been provisioned by an administrator. PVs are resources in the cluster, just like nodes, that can be used by users.
+
+**Key characteristics of PVs:**
+
+- They have a lifecycle independent of any individual pod.
+- They need to be explicitly created, and their management is usually performed by cluster administrators.
+
+**Persistent Volume Claims (PVC):**
+
+A Persistent Volume Claim (PVC) is a request for storage by a user. PVCs consume PV resources. They allow users to request specific levels of resources (like storage capacity) without needing to know the underlying storage details. PVCs are bound to PVs based on the storage requirements specified in the claim.
+
+**Storage Classes**
+
+In Kubernetes, a StorageClass is an object that defines the different storage configurations available in a cluster. It provides a way to abstract and manage the underlying storage infrastructure. StorageClasses are essential for dynamic provisioning of Persistent Volumes (PVs) and allow you to define various classes of storage with different properties and capabilities.
+
+Here are the key concepts related to StorageClasses in Kubernetes:
+
+**Dynamic Provisioning:**
+
+One of the main purposes of StorageClasses is to enable dynamic provisioning of Persistent Volumes. When a Persistent Volume Claim (PVC) requests storage using a StorageClass, Kubernetes automatically creates a PV with the characteristics defined in that StorageClass. This simplifies the process of allocating storage for applications.
+
+**Reclaim Policy:**
+
+StorageClasses also allow you to set a ReclaimPolicy, which determines what happens to the data when a PV is released. There are three reclaim policies:
+
+**Retain**: The data is retained even after the PVC is deleted, and it must be manually cleaned up.
+
+**Recycle**: The provisioner attempts to clean the data before making it available for another claim.
+
+**Delete**: The data is immediately deleted when the PVC is released.
+
+**Access Modes:**
+
+You can specify the access modes in a StorageClass, indicating whether the storage is read-write or read-only. The common access modes are:
+
+**ReadWriteOnce (RWO):** The volume can be mounted as read-write by a single node.
+
+**ReadOnlyMany (ROX):** The volume can be mounted as read-only by multiple nodes.
+
+**ReadWriteMany (RWX):** The volume can be mounted as read-write by multiple nodes.
+
+**Minikube-** used for deploying single node cluster components.
+
+**Kubeadm-** used for deploying multinode cluster components.
+
+**Openshift, Cloudfoundry CR, VMware Cloud PKS** - open source container runtime solutions used for deploying and managing containers.
+
+**Networking**
+
+**ip link:** to list all networks
+
+**ip addr:** to know IP address
+
+**ip addr add 192.168.1.10/24 dev eth0:** to add ip to a n/w interface
+
+**ip route:** to see the routing details
+
+**ip route add 192.168.1.0/24 via 192.168.2.1:**  to connect with other network device
+
+**cat /proc/sys/net/ipv4/ip_forward:** to check whether ip forwarding enabled or not.
+
+It by default listens on port 53, which is the default port for a DNS server.
+
+**CNI Weave**
+
+"Weave" is a popular Container Network Interface (CNI) plugin used in Kubernetes for networking and is known as "Weave CNI." It provides network connectivity between pods and nodes in a Kubernetes cluster, allowing them to communicate with each other.
+
+Identify the name of the bridge network/interface created by weave on each node. - ip link
+
+What is the IP address configured on weave - ip addr show weave
+
+What is the default gateway configured on the PODs scheduled on `node01`?-
+
+SSH to the `node01` by running the command: `ssh node01` and then run the `ip route` command and look at the `weave` line.
+
+Networking - https://k21academy.com/docker-kubernetes/kubernetes-networking/
+
+Kubernetes uses CoreDNS. CoreDNS is a flexible, extensible DNS server that can serve as the Kubernetes cluster DNS.
+
+CNI Plugins - weave net, flannel, calico
+
+**Commands**
+
+**To expose any pod as service** - kubectl expose pod pod-name —port 4567 —name service-name
+
+**To expose any deployment  as service -** kubectl expose deploy deploy-name —type NodePort—port 4567 —name service-name
+
+**To see certificate details for backup-** cat /etc/kubernetes/manifests/etcd.yaml | grep file.
+
+**To view IP addr or port url of ETCD:** vi /etc/kubernetes/manifests/etcd.yaml
+
+**To backup  etcd cluster and save it to /opt/etcd-backup.db. -** ETCDCTL_API=3 etcdctl --endpoints 127.0.0.1:2379 snapshot save /opt/etcd-backup.db --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key Snapshot saved at /opt/etcd-backup.db
+
+**Kubectl get nodes -o json | jd - retrive json format in color**
+
+**Labs:**
+
+**Upgrade the current version of kubernetes from 1.26.0 to 1.27.0 exactly using the kubeadm utility.**
+
+**Steps:**
+
+**On controlplane**
+
+Drain controlplane node- kubectl drain node control plane
+
+**upgrade kubeadm**
+
+apt-get update
+
+apt-get install -y kubeadm=1.27.0-00
+
+kubeadm upgrade plan
+
+kubeadm upgrade apply v1.27.0
+
+**check controlplane has any taints and remove it**
+
+kubectl describe node controlplane | grep -A 3 taint
+
+kubectl taint node controlplane node-role.kubernetes.io/control-plane:NoSchedule-
+
+kubectl taint node controlplane node.kubernetes.io/unschedulable:NoSchedule-
+
+**upgrade kubelet**
+
+apt-mark unhold kubelet
+
+apt-get install -y kubelet=1.27.0-00
+
+systemctl daemon-reload
+
+systemctl restart kubelet
+
+**Uncordon controlplane node**
+
+kubectl uncordon controlplane
+
+**upgrade kubectl**
+
+apt-get install -y kubectl=1.27.0-00
+
+**Next drain workernode (node01)**
+
+kubectl drain node node01
+
+**Go to workernode**
+
+ssh node01
+
+**upgrade kubeadm**
+
+apt-get update
+
+apt-get install -y kubeadm=1.27.0-00
+
+kubeadm upgrade node
+
+**upgrade kubelet**
+
+apt-get install -y kubelet=1.27.0-00
+
+systemctl daemon-reload
+
+systemctl restart kubelet
+
+Exit from controlplane
+
+**Uncordon workernode**
+
+kubectl uncordon node01
+
+**verify any pod scheduled on controlplane node**
+
+kubectl get pods -o wide | grep pod-name
+
+https://github.com/kodekloudhub/certified-kubernetes-administrator-course/blob/master/docs/14-Lightning-Labs/02-Lightning-Lab-1.md
+
+.
+
+In Kubernetes, deployments are a way to declaratively manage the deployment of applications. Deployments provide a higher-level abstraction over pods and replica sets, allowing for easy scaling, rolling updates, and rollbacks. There are different types of deployments and strategies for updating applications in Kubernetes. Here are some common types:
+
+1. **Recreate Deployment:**
+    - This is the simplest deployment strategy. When you update the application, Kubernetes stops all existing pods and creates new ones with the updated configuration. While straightforward, this approach can result in downtime during the update.
+2. **Rolling Deployment:**
+    - Rolling deployments gradually replace instances of the old application with the new one. Kubernetes updates the pods in a controlled manner, one at a time, ensuring that a certain number of pods are available and running throughout the update. This helps minimize downtime.
+3. **Blue-Green Deployment:**
+    - In a blue-green deployment, two identical environments, often referred to as "blue" and "green," are maintained. At any given time, only one of these environments serves live production traffic. When a new version is deployed, the traffic is switched from the "blue" environment to the "green" environment. This approach reduces downtime and allows for easy rollback by switching back to the previous environment.
+4. **Canary Deployment:**
+    - Canary deployments involve gradually introducing a new version of the application to a subset of users or traffic. This allows you to monitor the performance and stability of the new version before making it available to all users. If issues are detected, the deployment can be halted or rolled back.
+5. **A/B Testing Deployment:**
+    - A/B testing is a deployment strategy where multiple versions (A and B) of an application are deployed simultaneously, and a subset of users is directed to each version. This allows you to compare the performance, user experience, or other metrics between the two versions and make informed decisions about which version to fully deploy.
+6. **Shadow Deployment:**
+    - In a shadow deployment, the new version of the application is deployed alongside the existing version, but it doesn't receive live traffic. Instead, it runs in the background, allowing you to monitor its behavior and performance without affecting the production environment. This can be useful for testing in a real-world scenario.
+
+These deployment strategies can be configured using Kubernetes Deployments and associated objects like ReplicaSets. The choice of deployment strategy depends on factors such as the desired level of availability during updates, the impact on users, and the need for testing and validation before full deployment.
+
+[Ingress](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#ingress-v1-networking-k8s-io) exposes HTTP and HTTPS routes from outside the cluster to [services](https://kubernetes.io/docs/concepts/services-networking/service/) within the cluster. Traffic routing is controlled by rules defined on the Ingress resource.
+
+Here is a simple example where an Ingress sends all its traffic to one Service:
+
+![](https://kubernetes.io/docs/images/ingress.svg)
+
+In Kubernetes (K8s), CNI stands for Container Network Interface. It is a specification and a set of libraries that define how network plugins interact with container runtimes, such as Docker or containerd, to provide networking for containers.
