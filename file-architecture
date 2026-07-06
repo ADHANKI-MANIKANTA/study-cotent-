@@ -1,0 +1,63 @@
+microservices-k8s-project/
+│
+├── frontend/
+│   ├── index.html
+│   ├── script.js
+│   └── Dockerfile
+│
+├── api-gateway/
+│   ├── app.js
+│   ├── package.json
+│   └── Dockerfile
+│
+├── user-service/
+│   ├── app.js
+│   ├── db.js
+│   ├── package.json
+│   └── Dockerfile
+│
+├── product-service/
+│   ├── app.js
+│   ├── package.json
+│   └── Dockerfile
+│
+├── order-service/
+│   ├── app.js
+│   ├── package.json
+│   └── Dockerfile
+│
+├── k8s/
+│   ├── namespace.yaml
+│   ├── frontend.yaml
+│   ├── api-gateway.yaml
+│   ├── user-service.yaml
+│   ├── product-service.yaml
+│   ├── order-service.yaml
+│   └── ingress.yaml   (later)
+│
+├── docker-compose.yml   (for local testing)
+└── README.md
+
+
+
+https://laughing-halibut-97xvv76vwj9637w7r-3002.app.github.dev/product
+
+https://laughing-halibut-97xvv76vwj9637w7r-3001.app.github.dev/user
+https://laughing-halibut-97xvv76vwj9637w7r-3003.app.github.dev/order
+
+curl -X POST https://laughing-halibut-97xvv76vwj9637w7r-3001.app.github.dev/ \
+-H "Content-Type: application/json" \
+-d '{"name":"Manikanta"}'
+
+
+$ curl http://localhost:3000/users
+[{"id":1,"name":"Manikanta"},{"id":2,"name":"Manikanta"},{"id":3,"name":"Manikanta"}]@ADHANKI-MANIKANTA ➜ /workspaces/leo (main) $ curl http://localhost:3000/products
+[{"id":1,"name":"Laptop"},{"id":2,"name":"Mobile"},{"id":3,"name":"Headphones"}]@ADHANKI-MANIKANTA ➜ /workspaces/leo (main) $ curl http://localhost:3000/order/1/1
+{"orderId":762,"user":{"id":1,"name":"Manikanta"},"product":{"id":1,"name":"Laptop"},"status":"SUCCESS"}@ADHANKI-MANIKANTA ➜ /workspaces/leo (main) $ 
+
+
+
+
+
+
+
