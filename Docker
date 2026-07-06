@@ -1,0 +1,84 @@
+**Docker:** Docker is a free platform which allows developers  to build, run and deploy the applications using containers.
+
+**Container:** Container is a standalone executable package that includes everything to run an application  like runtime tools, code, system tools and libraries.
+
+- Docker share a same kernel so that it can run application on OS.
+- But windows doesn't share a same kernel. so you cannot run windows based container on a docker host with linux.
+- Main purpose of docker is to package and containerize the applications and ship them and run them anywhere, anytime.
+- Virtual Machines have different OS for different applications where Docker has same OS for all applications.
+- Public Docker Repository called as DockerHub.
+
+**Image:** Image is a package or template from which we can create multiple containers. Where as containers are running instances of an image.
+
+**docker run nginx(cName) :** Run command is used to start a container.
+
+**docker ps :** ps command used to list containers.
+
+**docker stop :** stop command used to stop the containers.
+
+- exec : used to execute a command on a running container
+- rm : remove containers
+- rmi : remove images
+- docker run -it cents bash : to enter into docker container from docker dashboard (switch)
+
+**Delete all containers from the Docker Host.**
+
+Both Running and Not Running ones. Remember you may have to stop containers before deleting them.
+
+To stop all the containers at once, run the command: **docker stop $(docker ps -aq)**
+
+To remove all the stopped containers at once, run the command: **docker rm $(docker ps -aq)**
+
+**Labs**
+
+**1.Run a container named blue-app using image kodekloud/simple-webapp and set the environment variable APP_COLOR to blue. Make the application available on port 38282 on the host. The application listens on port 8080.**
+
+Run the command : docker run -p 38282:8080 --name blue-app -e APP_COLOR=blue -d kodekloud/simple-webapp
+
+To know the env field from within a webapp container, run docker exec -it blue-app env
+
+**2.Deploy a mysql database using the mysql image and name it mysql-db.**
+
+**Set the database password to use db_pass123. Lookup the mysql image on Docker Hub and identify the correct environment variable to use for setting the root password.**
+
+Run the command: docker run -d -e MYSQL_ROOT_PASSWORD=db_pass123 --name mysql-db mysql
+
+To know the env field from within a mysql-db container, run docker exec -it mysql-db env
+
+- **ENTRYPOINT** is used to define the main command of your container, while **CMD** is used to provide default arguments or a default command that can be overridden when running the container.
+
+**Docker Engine**
+
+- **Docker CLI :** it is interface to execute the commands like running containers etc
+- **Rest API :**it provides interface for programmers to talk to the deamon and provide instructions
+- **Docker Deamon :** it is a background process for managing docker objects like images, containers, volumes etc services
+
+**Docker Networking**
+
+- **Bridge:** it is default network that contains all the containers on docker host.
+- Docker run —network bridge nginx
+- **None:** containers are not attached to any network
+- **Host:** used to run web container on different ports
+
+**Deploy a web application named webapp using the kodekloud/simple-webapp-mysql image. Expose the port to 38080 on the host. The application makes use of two environment variable: 1: DB_Host with the value mysql-db. 2: DB_Password with the value db_pass123. Make sure to attach it to the newly created network called wp-mysql-network.**
+
+**Run the command:** docker run --network=wp-mysql-network -e DB_Host=mysql-db -e DB_Password=db_pass123 -p 38080:8080 --name webapp --link mysql-db:mysql-db -d kodekloud/simple-webapp-mysql
+
+Dockerfile can be created using **vim** command and insert text and click esc and then type **:wq** and press enter to exit.
+
+**Docker Registry**
+
+- **Let practice deploying a registry server on our own.
+Run a registry server with name equals to my-registry using registry:2 image with host port set to 5000, and restart policy set to always.
+Note: Registry server is exposed on port 5000 in the image.**
+- **docker run -d -p 5000:5000 --restart=always --name my-registry registry:2**
+
+**Container Orchestration**
+
+- Container orchestration automates the deployment, management, scaling, and networking of containers. Enterprises that need to deploy and manage hundreds or thousands of Linux® containers and hosts can benefit from container orchestration.
+
+**Docker Swarm**
+
+- A Docker Swarm is a container orchestration tool running the Docker application. It has been configured to join together in a cluster. The activities of the cluster are controlled by a swarm manager, and machines that have joined the cluster are referred to as nodes.Docker Swarm enables you to deploy, manage, and scale containerized applications across multiple hosts with ease.
+- 
+- Nodes: In Docker Swarm, nodes are the individual Docker hosts that participate in the swarm. Nodes can be worker nodes or manager nodes. Manager nodes are responsible for orchestrating the deployment and management of services, while worker nodes execute the tasks defined by those services.
