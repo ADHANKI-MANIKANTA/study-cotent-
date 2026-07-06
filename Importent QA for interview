@@ -1,0 +1,264 @@
+1. tell me how your day will starts as a devops engineer, what will do?
+2. how to configure HPA ? what are the parameters of HPA and on what metrics basis you configure HPA ?
+3. what are metrics that we you consider to configure HPA.?
+4. have you aver build any architecture through terraform ?
+5. what is biggest thing that you automated and build in your current role ? what is the impact of it ?
+6. on what basis you do configure HPA, ?
+7. have you aver build any architecture of application.? take me anything that you build on your company, how you did?
+8. what kind of tools do use in message queue?
+9. how to configure kafka.?
+10. do you know how to write terraform provisioning?
+11. what are all the ai tools that you use in your day to day life ?
+ 
+
+
+Hi
+Adhanki Manikanta
+Daily Routine Start
+My day as a DevOps engineer typically begins with a quick health check of critical systems. I start by reviewing overnight alerts in tools like Prometheus/Grafana or Datadog, scanning Slack/Teams for urgent incidents (e.g., pipeline failures or downtime), and triaging any PagerDuty escalations to ensure SLAs are met—prioritizing fixes like restoring a broken deployment before stand-ups. This is followed by a 15-minute team stand-up to align on priorities, then diving into automation backlog tasks such as optimizing CI/CD workflows or infrastructure tweaks. I then check the CI/CD pipelines to see if any deployments failed. During the Daily Stand-up, I align with the dev teams to unblock any infrastructure dependencies. My focus then shifts to 'SRE-style' work: 50% on operational tasks (fixing pipeline bottlenecks or scaling issues) and 50% on engineering projects like automating manual workflows or optimizing cloud costs."
+HPA Configuration Steps
+Horizontal Pod Autoscaler (HPA) in Kubernetes automatically scales pod replicas based on observed metrics, and I've configured it extensively for microservices handling millions of requests daily. To set it up: (1) Ensure Metrics Server is installed (kubectl top nodes works); (2) Create an HPA YAML manifest targeting a Deployment; (3) Apply with kubectl apply -f hpa.yaml; (4) Monitor via kubectl get hpa and kubectl describe hpa. Key parameters include: apiVersion: autoscaling/v2, scaleTargetRef (targets Deployment kind/name), minReplicas/maxReplicas (e.g., 3/20), behavior (scaleUp/scaleDown policies for stabilizationWindowSeconds), and metrics array defining targets like CPU utilization.
+HPA Metrics Overview
+HPA supports three metric types: resource metrics (CPU/memory requests/limits), object metrics (e.g., pods/sec from another object), and external/custom metrics (app-specific via Prometheus Adapter). I configure based on workload: CPU for compute-bound apps (target 70% average), memory for data-heavy services, or custom like requests-per-second (RPS) for web apps—integrated via metricSelector with Prometheus queries exposed through custom.metrics.k8s.io.
+Metrics for HPA Selection
+Primary metrics I consider: CPU utilization (70-80% target for balanced scaling), memory usage (60-75% to avoid OOMKills), custom app metrics (e.g., queue length >50 or RPS >100 via Prometheus), and external metrics from tools like Datadog for business KPIs (e.g., error rate). Selection basis: workload profiling—CPU for stateless APIs, memory+RPS combo for e-commerce spikes; always test in staging with load tools like Locust to avoid flapping.
+Terraform Architecture Experience
+Yes, I've built multiple full-stack architectures using Terraform, such as a multi-region EKS cluster with VPCs, ALBs, RDS, and auto-scaling groups. In one project, I modularized it: root module calls child modules for networking (VPC/subnets), compute (EKS nodes), and storage (EFS/S3); used remote state in S3 with DynamoDB locking; applied via terraform init/plan/apply in GitHub Actions CI/CD. This ensured reproducible, versioned infra across dev/stage/prod.
+Largest Automation Achievement
+The biggest automation I led was a fully self-service GitOps pipeline using ArgoCD, Terraform Cloud, and Crossplane for provisioning 100+ tenant namespaces on EKS, reducing manual infra tickets by 85%. It integrated OPA Gatekeeper for policy-as-code, automated cert rotations via cert-manager, and scaled via KEDA. Impact: Deployment time dropped from 2 days to 15 minutes, costs optimized 40% via spot instances, and engineer productivity boosted—handling 5x traffic growth without downtime.
+HPA Configuration Basis
+I base HPA config on app profiling (historical Prometheus data), SLOs (e.g., 99.9% availability), and load testing: set CPU target at 70% for steady scaling, minReplicas to handle baseline traffic, maxReplicas for bursts (with cooldown 300s), and multiple metrics to prevent single-point failures. Always enable stabilizationWindowSeconds (300s scale-up, 5min scale-down) and monitor for thrashing via kubectl get hpa --watch.
+Application Architecture Built
+Yes, at my company, I architected a resilient e-commerce backend on AWS EKS: ingress via ALB/NLB, services in namespaces with Istio service mesh for traffic splitting/mTLS, persistent Kafka for order queues, and observability stack (Prometheus + Grafana Loki). Built via Terraform modules (network/compute/addons), deployed GitOps-style with FluxCD syncing Helm charts; added HPA/VPA for pods, Cluster Autoscaler for nodes. Process: requirements gathering → TOGAF diagramming → Terraform POC → CI/CD integration → prod rollout with canary blue-green deploys—achieved 99.99% uptime under Black Friday loads.
+Message Queue Tools
+For message queues, I use Kafka (high-throughput event streaming), RabbitMQ (task queues with ACKs), SQS/SNS (serverless AWS), and Redis Streams (lightweight pub/sub). Selection depends on needs: Kafka for ordered, durable logs; RabbitMQ for RPC patterns; SQS for decoupled microservices.
+Kafka Configuration Process
+To configure Kafka: (1) Provision cluster via Strimzi Helm on K8s (helm install kafka strimzi/strimzi-kafka-operator); (2) Create Kafka topic (kubectl apply -f topic.yaml with partitions=10, replicas=3); (3) Set broker configs in CRD (e.g., replicationFactor: 3, min.insync.replicas: 2); (4) Enable TLS/auth with OAuth/OIDC; (5) Integrate with Schema Registry and Kafka Connect for CDC. Tuned for 1M+ msg/sec: num.network.threads=8, log.segment.bytes=1GB.
+Terraform Provisioning Knowledge
+Absolutely—Terraform provisioning uses HCL: define providers (e.g., provider "aws" {region = "us-east-1"}), resources (e.g., resource "aws_eks_cluster" "main" {name = "prod"}), data sources, variables/outputs, and modules. Workflow: init (download providers), plan (diff preview), apply (provision idempotently), destroy. I use workspaces for envs, Terragrunt for DRY, and Sentinel for policy.
+AI Tools in Daily Workflow
+In my DevOps role, I leverage GitHub Copilot for faster IaC/Terraform scripting (suggests 70% of boilerplate), Cursor AI for debugging pipelines, Amazon Q for AWS troubleshooting, and ChatGPT/Claude for diagramming (Mermaid from natural language). Also use Firefly for architecture viz and Perplexity for quick research on edge cases like K8s operators—boosts productivity 30% without compromising security.
+
+
+
+
+
+
+
+
+
+List of Ports to be familiar with
+Here's a list of standard ports you should see at least once. You shouldn't remember them (the exam will not test you on that), but you should be able to differentiate between an Important (HTTPS - port 443) and a database port (PostgreSQL - port 5432) 
+
+Important ports:
+
+FTP: 21
+
+SSH: 22
+
+SFTP: 22 (same as SSH)
+
+HTTP: 80
+
+HTTPS: 443
+
+vs RDS Databases ports:
+
+PostgreSQL: 5432
+
+MySQL: 3306
+
+Oracle RDS: 1521
+
+MSSQL Server: 1433
+
+MariaDB: 3306 (same as MySQL)
+
+Aurora: 5432 (if PostgreSQL compatible) or 3306 (if MySQL compatible)
+
+
+
+Don't stress out on remember those, just read that list once today and once before going into the exam and you should be all set :)
+
+Remember, you should just be able to differentiate an "Important Port" vs an "RDS database Port".
+
+
+
+
+/api/v1/tenants/600326/domain-event-types/ledger-posting-creation/evaluate-bot
+
+photonorcus.cluster.olympus.infra
+
+
+Unable to load data: <html> <head><title>502 Bad Gateway</title></head> <body> <center><h1>502 Bad Gateway</h1></center> </body> </html> <!-- a padding to disable MSIE and Chrome friendly error page --> <!-- a padding to disable MSIE and Chrome friendly error page --> <!-- a padding to disable MSIE and Chrome friendly error page --> <!-- a padding to disable MSIE and Chrome friendly error page --> <!-- a padding to disable MSIE and Chrome friendly error page --> <!-- a padding to disable MSIE and Chrome friendly error page -->
+
+
+
+
+
+Perfect—this is where everything clicks. Let’s walk through a real microservice flow and see how these Kinds work together inside one Argo CD Application on Kubernetes.
+
+🚀 End-to-End Flow: One Microservice (User Service)
+🧱 Step 0: What we’re building
+
+A simple user-service that:
+
+Runs in Pods
+Exposed internally + externally
+Auto-scales
+Monitored
+📦 1. ConfigMap (Configuration)
+
+Stores app configs (no hardcoding)
+
+kind: ConfigMap
+metadata:
+  name: user-config
+data:
+  DB_HOST: mysql
+  ENV: production
+
+👉 Used by your app inside Pods
+
+🔐 2. ServiceAccount (Identity)
+kind: ServiceAccount
+metadata:
+  name: user-sa
+
+👉 Controls what your app can access (RBAC)
+
+⚙️ 3. Deployment (Main brain)
+kind: Deployment
+metadata:
+  name: user-service
+spec:
+  replicas: 2
+  template:
+    spec:
+      serviceAccountName: user-sa
+      containers:
+      - name: app
+        image: user-service:v1
+
+👉 This creates and manages Pods
+
+📦 4. Pod (Actual running unit)
+
+You don’t create Pods manually here—Deployment does it.
+
+👉 Pods:
+
+Run your container
+Use ConfigMap
+Use ServiceAccount
+🌐 5. Service (Internal access)
+kind: Service
+metadata:
+  name: user-service
+spec:
+  selector:
+    app: user-service
+  ports:
+    - port: 80
+      targetPort: 8080
+
+👉 Provides:
+
+Stable IP
+Load balancing across Pods
+🌍 6. Ingress (External access)
+kind: Ingress
+metadata:
+  name: user-ingress
+spec:
+  rules:
+  - host: user.myapp.com
+    http:
+      paths:
+      - path: /
+
+👉 Allows users to access:
+
+https://user.myapp.com
+📈 7. HorizontalPodAutoscaler (Scaling)
+kind: HorizontalPodAutoscaler
+metadata:
+  name: user-hpa
+
+👉 Automatically:
+
+Increases Pods when traffic ↑
+Decreases when traffic ↓
+🛡️ 8. PodDisruptionBudget (Stability)
+kind: PodDisruptionBudget
+
+👉 Ensures:
+
+Minimum Pods always running
+Safe during updates/restarts
+📊 9. ServiceMonitor (Monitoring)
+
+From Prometheus
+
+kind: ServiceMonitor
+
+👉 Tells monitoring system:
+
+“Track metrics of this service”
+🔁 Full Flow (This is what matters)
+User Request
+     ↓
+Ingress (entry point)
+     ↓
+Service (load balancer)
+     ↓
+Pods (running app)
+     ↑
+Deployment (manages Pods)
+     ↑
+ConfigMap + ServiceAccount (support)
+🔄 Where Argo CD fits
+
+Inside one Argo CD Application, all these YAMLs exist in Git:
+
+repo/
+ ├── deployment.yaml
+ ├── service.yaml
+ ├── ingress.yaml
+ ├── configmap.yaml
+ ├── hpa.yaml
+
+👉 Argo CD:
+
+Reads Git
+Applies all these Kinds
+Keeps them in sync
+🧠 Big Picture (VERY IMPORTANT)
+
+👉 Your microservice = combination of multiple Kinds
+
+NOT just Deployment.
+
+🔥 Real-world upgrade (what companies do)
+
+They also add:
+
+API Gateway configs (KongIngress, KongPlugin)
+Alerts (PrometheusRule)
+Security scans (BackgroundScanReport)
+🎯 Interview-ready summary
+
+👉
+“A microservice in Kubernetes is composed of multiple resource types like Deployment, Service, Ingress, ConfigMap, and HPA, all working together to run, expose, scale, and manage the application, and Argo CD manages these resources declaratively from Git.”
+
+
+
+
+
+
+
+
+
+
+
+
