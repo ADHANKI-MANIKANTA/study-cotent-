@@ -54,3 +54,113 @@ stages {
           }
 
  
+
+
+
+
+Jenkinsfile (Real DevOps Pipeline)
+pipeline {
+    agent any
+
+    environment {
+        AWS_REGION = "ap-south-1"
+        IMAGE_NAME = "my-app"
+        ACCOUNT_ID = "<your-account-id>"
+        ECR_REPO = "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_NAME}"
+    }
+
+    stages {
+
+        // ==============================
+        // 🔨 BUILD DOCKER IMAGE
+        // ==============================
+        stage('Build') {
+            steps {
+                sh 'docker build -t $IMAGE_NAME:$BUILD_NUMBER .'
+            }
+        }
+
+        // ==============================
+        // 🔐 LOGIN TO ECR
+        // ==============================
+        stage('Login to ECR') {
+            steps {
+                sh '''
+                aws ecr get-login-password --region $AWS_REGION | \
+                docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+                '''
+            }
+        }
+
+        // ==============================
+        // 🚀 PUSH IMAGE TO ECR
+        // ==============================
+        stage('Push Image') {
+            steps {
+                sh '''
+                docker tag $IMAGE_NAME:$BUILD_NUMBER $ECR_REPO:$BUILD_NUMBER
+                docker push $ECR_REPO:$BUILD_NUMBER
+                '''
+            }
+        }
+
+        // ==============================
+        // ☸️ DEPLOY TO EKS USING HELM
+        // ==============================
+        stage('Deploy to EKS') {
+            steps {
+                sh '''
+                aws eks update-kubeconfig --region $AWS_REGION --name my-cluster
+
+                helm upgrade --install my-app ./helm/my-app \
+                --set image.repository=$ECR_REPO \
+                --set image.tag=$BUILD_NUMBER
+                '''
+            }
+        }
+    }
+}
+
+
+
+
+
+------------------------------------------------------------------------------------------------
+
+OPTION 1: Complete Real-Time Project (Resume Ready)
+🧠 Project Name:
+
+👉 E2E DevOps Pipeline using EKS + Helm + CI/CD
+
+🧱 Architecture
+Developer → GitLab
+        ↓
+CI/CD Pipeline
+        ↓
+Docker Build
+        ↓
+Push to AWS ECR
+        ↓
+Deploy to EKS using Helm
+        ↓
+Expose via Service + Ingress
+🛠️ Tools Used
+Docker
+Amazon ECR
+Amazon EKS
+Helm
+GitLab
+📁 Steps (What YOU do)
+1. Create simple app
+node app.js  OR  python app.py
+2. Dockerize
+FROM nginx
+COPY . /usr/share/nginx/html
+3. Push to ECR
+4. Create Helm Chart
+helm create my-app
+5. Deploy
+helm upgrade --install my-app .
+🎯 Resume Line (VERY IMPORTANT)
+
+Built an end-to-end CI/CD pipeline deploying containerized applications to AWS EKS using Helm, Docker, and GitLab CI/CD.
