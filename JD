@@ -1,0 +1,36 @@
+● Incident first response (L2): Acknowledge alerts/tickets, validate impact, check recent
+deployments, identify blast radius, and execute standardized mitigations.
+● Stabilize & scale: Adjust autoscaling/instances, recycle unhealthy pods/services, clear
+stuck queues, and apply safe config toggles/feature flags.
+● Voice pipeline checks: Verify call flows, SIP/SPI trunks, WebSocket audio paths,
+STT/TTS health, latency/jitter, and media server status.
+● Observability & runbooks: Use dashboards, traces, and log queries to diagnose;
+update runbooks/KBs with fixes and post-incident notes.
+● Escalation & comms: Follow severity matrix, page the right owner
+(AI/Backend/DevOps) when needed, and post clear status updates to Slack/Jira.
+● Change execution: Run safe, pre-approved changes (config updates, blue/green flips,
+cache purges, queue drains, canary rollbacks).
+● Quality & compliance: Handle PHI carefully; follow access controls and evidence
+capture for audits (SOC2/HIPAA practices).
+Qualifications
+
+
+
+
+
+
+
+
+● Production ops: 2–5 years in SRE/DevOps/L2 support for cloud-native,
+customer-facing systems.
+
+● Cloud: Solid with AWS (EC2/EKS/ECS, ALB/NLB, S3, CloudWatch, IAM).
+● Containers & CI/CD: Docker, Kubernetes fundamentals, rollouts/rollbacks; comfort with
+Git-based releases.
+● Observability: Hands-on with tools like Datadog/Grafana/Prometheus and log stacks
+(e.g., ELK/CloudWatch Logs). Able to craft quick queries and build useful alerts.
+● Networking basics: DNS/TLS, load balancers, health checks, rate limiting, webhooks,
+WebSockets.
+● Incident management: Familiar with on-call etiquette, severity/priority definitions, and
+writing concise incident timelines.
+● Communication: Clear written English for client-facing updates and internal handoffs.
