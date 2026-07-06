@@ -8,3 +8,10 @@ lets say a thread is completed all tits tasks how dose this reachout to db ?To u
 In Java, methods do not each have their own stack; instead, each thread has its own stack. When a method is called, a new stack frame is pushed onto the thread’s stack, which includes the method’s local variables and parameters. As methods complete, their stack frames are popped off the stack. This means that while each method call has its own space on the stack for its local variables and parameters, the stack itself is shared by all method calls made by the thread.
 
 Each thread in a Java application has its own stack, which is separate from other threads’ stacks. This ensures that each thread’s method calls and local variables do not interfere with those of other threads.
+
+
+
+ 
+In Java, methods do not each have their own stack; instead, each thread has its own stack. When a method is called, a new stack frame is pushed onto the thread’s stack, which includes the method’s local variables and parameters. As methods complete, their stack frames are popped off the stack. This means that while each method call has its own space on the stack for its local variables and parameters, the stack itself is shared by all method calls made by the thread.
+ 
+Each thread in a Java application has its own stack, which is separate from other threads’ stacks. This ensures that each thread’s method calls and local variables do not interfere with those of other threads.
