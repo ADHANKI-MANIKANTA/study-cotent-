@@ -94,3 +94,196 @@ I would implement a full observability stack using Prometheus, Grafana, Loki/ELK
 If you want next, I can give:
 👉 real architecture diagram explanation (how data flows end-to-end)
 👉 or interview “deep dive follow-up questions they will ask after this answer”
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Please note that this interview will take ~53 minutes with each question having a limited time for a response. You will answer by speaking, or typing. Ensure you’re in a quiet spot with a stable internet connection. This interview will be recorded and available in your profile link.
+
+You will be interviewed on these topics
+Multi-cloud infrastructure (AWS/Azure/GCP + DigitalOcean)
+Infrastructure as Code & configuration management (Terraform, Ansible)
+Containers & orchestration (Docker, Kubernetes)
+CI/CD automation & deployment pipelines
+Observability & operations (Prometheus, Grafana, logging)
+
+
+Please don’t refresh the page during the interview.
+
+
+
+
+DevOps Engineer Case
+Docker + CI/CD Design
+
+
+Case Study
+Overview
+
+You are a DevOps Engineer tasked with containerizing a simple web application, establishing a CI/CD pipeline, and documenting the process. Review the scenario, analyze the current challenges, and propose a concrete technical plan.
+
+Suggested Steps
+1
+Read the scenario and technical context carefully
+2
+Analyze the current deployment pain points
+3
+Design the Dockerfile and CI/CD pipeline approach
+4
+Draft key sections of the README and justify your choices
+5
+Submit your final recommendation
+Pro Tips
+→
+Favor simplicity and reproducibility over complex tooling
+→
+Think about caching, image size, and build speed
+→
+Document assumptions clearly in your answers
+Scoring Rubric
+Technical Correctness
+30%
+Pipeline Design
+25%
+Security & Secrets Handling
+15%
+Documentation Quality
+15%
+Pragmatism & Simplicity
+15%
+Total: 100 points
+
+Topics Covered
+DevOps
+Containerization
+CI/CD
+Cloud Deployment
+Case Study
+Difficulty: Medium
+DevOps Engineer Case: Containerizing and Deploying a Web App with CI/CD
+Design a Docker-based deployment pipeline for a growing startup's web application
+
+Case Background
+A small startup needs to modernize its deployment workflow. Your decisions will shape how the team ships code moving forward.
+
+Scenario Brief
+BrightCart is a 12-person e-commerce startup running a Node.js (Express) web application that serves a product catalog and checkout API. The app currently runs on a single Ubuntu VM managed by one developer who SSHs in, pulls from main, runs 'npm install', and restarts the process using pm2. Deployments happen 2-3 times per week and break roughly 30% of the time due to environment drift (different Node versions, missing env vars, OS package mismatches between laptops and the VM). The team has no automated tests running on deploy, no rollback mechanism, and onboarding a new developer takes 1-2 days of environment setup. Leadership has approved a 2-sprint initiative to containerize the app with Docker and introduce a CI/CD pipeline using GitHub Actions (the code already lives on GitHub). The target deployment environment is a single cloud VM that can run Docker; Kubernetes is explicitly out of scope for this phase. The app listens on port 3000, requires Node 20, uses environment variables for DATABASE_URL and STRIPE_KEY, and has a Jest test suite that runs in about 40 seconds. The team wants: (1) a Dockerfile that produces a small, reproducible image, (2) a GitHub Actions workflow that builds the image, runs tests, pushes to a registry, and triggers a deploy on merges to main, and (3) a README that lets any new developer run the app locally in under 10 minutes.
+
+Key Facts & Constraints
+Team Size
+12 engineers
+Deploy Frequency
+2-3 per week
+Current Failure Rate
+~30%
+Runtime
+Node.js 20 + Express
+App Port
+3000
+Test Suite Duration
+~40 seconds
+Target Env
+Single Docker-enabled VM
+CI Platform
+GitHub Actions
+Required Env Vars
+DATABASE_URL, STRIPE_KEY
+Exhibits
+Exhibit A: Current Deployment Workflow (manual SSH + pm2)
+Exhibit B: Proposed Toolchain (Docker, GitHub Actions, Container Registry)
+Exhibit C: README Requirements Checklist
+Containerize and Automate BrightCart's Deployment Pipeline
+Design a Docker + CI/CD solution for BrightCart's Node.js web app. Your plan should cover the Dockerfile, the GitHub Actions pipeline, deployment strategy, and developer documentation. Responses should be concise and technically specific.
+
+Constraints: Constraints: single VM target, no Kubernetes, GitHub Actions as CI, minimize image size and build time, and ensure every merge to main is tested before deploy.
+
+1
+Situation Analysis
+Diagnose the root causes of BrightCart's deployment problems.
+
+Root Cause Analysis *
+Identify 3-4 root causes of the 30% deployment failure rate and the slow onboarding...
+2
+Dockerfile Design
+Specify how you will containerize the Node.js app.
+
+Base Image Choice for the Dockerfile *
+
+Select an option...
+Dockerfile Strategy *
+Describe your Dockerfile: multi-stage build? layer caching for npm install? non-root user? EXPOSE 3000? CMD? How do you handle env vars?
+3
+CI/CD Pipeline
+Define the GitHub Actions workflow stages and triggers.
+
+GitHub Actions Pipeline Stages *
+List the jobs/steps in order (e.g., checkout → install → test → build image → push to registry → deploy). Specify triggers (push, PR, main).
+Deployment Method to the VM *
+
+Select an option...
+Secrets & Environment Variables *
+How will DATABASE_URL and STRIPE_KEY be managed in CI, in the image, and on the VM? Avoid baking secrets into images.
+4
+README & Handoff
+Outline the documentation a new developer needs.
+
+Essential README Sections *
+
+Prerequisites
+
+Local setup with Docker
+
+Running tests
+
+Environment variables
+
+Deployment process
+
+Troubleshooting
+
+Architecture diagram
+
+Contribution guide
+5
+Recommendation
+Summarize your approach and confidence level.
+
+Risk of the First Production Rollout (1=low, 5=high) *
+1
+2
+3
+4
+5
+(1=low — 5=high)
+Confidence in Your Proposed Design (1=low, 5=high) *
+1
+2
+3
+4
+5
+(1=low — 5=high)
+Your responses are auto-saved locally as you work.
+
+Your DevOps plan has been submitted. Great work designing a containerized, automated deployment flow for BrightCart.
