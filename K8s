@@ -1,0 +1,689 @@
+# =========================
+# 🔰 BASIC COMMANDS
+# =========================
+
+kubectl get pods
+# Purpose: List all pods
+# When: First step to check pod status
+
+kubectl get pods -o wide
+# Purpose: Show pod IP, node details
+# When: Need node/IP info
+
+kubectl get all
+# Purpose: List all resources (pods, svc, deployments)
+# When: Quick cluster overview
+
+kubectl get pods -n <namespace>
+# Purpose: List pods in specific namespace
+# When: Working in multi-env (dev/prod)
+
+kubectl get ns
+# Purpose: List namespaces
+# When: Identify environments
+
+
+# =========================
+# 🔍 DESCRIBE & EVENTS
+# =========================
+
+kubectl describe pod <pod-name>
+# Purpose: Detailed pod info + events
+# When: Pod not starting / failing
+
+kubectl describe node <node-name>
+# Purpose: Node health, resource usage
+# When: Pods not scheduling
+
+kubectl get events
+# Purpose: Cluster events (errors/warnings)
+# When: Hidden issues (image pull, scheduling)
+
+
+# =========================
+# 📜 LOGS
+# =========================
+
+kubectl logs <pod-name>
+# Purpose: View application logs
+# When: App errors / crashes
+
+kubectl logs <pod-name> -c <container-name>
+# Purpose: Logs of specific container
+# When: Multi-container pod
+
+kubectl logs <pod-name> --previous
+# Purpose: Logs before crash
+# When: CrashLoopBackOff
+
+
+# =========================
+# 🧠 DEBUGGING (INSIDE POD)
+# =========================
+
+kubectl exec -it <pod-name> -- /bin/sh
+# Purpose: Access pod shell
+# When: Debug inside container
+
+kubectl exec <pod-name> -- ls /app
+# Purpose: Run command inside pod
+# When: Check files/config
+
+
+# =========================
+# 📊 RESOURCE USAGE
+# =========================
+
+kubectl top pod
+# Purpose: CPU/Memory usage of pods
+# When: High CPU / performance issue
+
+kubectl top node
+# Purpose: Node resource usage
+# When: Node overloaded
+
+
+# =========================
+# 🔄 DEPLOYMENT COMMANDS
+# =========================
+
+kubectl get deployment
+# Purpose: List deployments
+# When: Check app deployment status
+
+kubectl describe deployment <name>
+# Purpose: Deployment details
+# When: Deployment issues
+
+kubectl rollout status deployment <name>
+# Purpose: Check rollout progress
+# When: During deployment
+
+kubectl rollout history deployment <name>
+# Purpose: See previous versions
+# When: Need rollback info
+
+kubectl rollout undo deployment <name>
+# Purpose: Rollback deployment
+# When: Bad deployment
+
+
+# =========================
+# 🚫 POD TROUBLESHOOTING
+# =========================
+
+kubectl delete pod <pod-name>
+# Purpose: Restart pod
+# When: Temporary fix / stuck pod
+
+kubectl get pod <pod-name> -o yaml
+# Purpose: Full pod config
+# When: Deep debugging
+
+
+# =========================
+# 🌐 SERVICE & NETWORK
+# =========================
+
+kubectl get svc
+# Purpose: List services
+# When: Check exposure
+
+kubectl describe svc <service-name>
+# Purpose: Service details
+# When: Connectivity issue
+
+kubectl get endpoints
+# Purpose: Check pod connection to service
+# When: Service not routing traffic
+
+
+# =========================
+# 📦 CONFIG & SECRETS
+# =========================
+
+kubectl get configmap
+# Purpose: List configmaps
+# When: Config debugging
+
+kubectl describe configmap <name>
+# Purpose: View config values
+# When: App config issue
+
+kubectl get secret
+# Purpose: List secrets
+# When: Secret check
+
+kubectl describe secret <name>
+# Purpose: Secret details
+# When: Credential issues
+
+
+# =========================
+# ⚙️ YAML & VALIDATION
+# =========================
+
+kubectl apply -f file.yaml
+# Purpose: Apply config
+# When: Deploy resources
+
+kubectl apply -f file.yaml --dry-run=client
+# Purpose: Validate YAML
+# When: Before deployment
+
+kubectl delete -f file.yaml
+# Purpose: Delete resources
+# When: Cleanup
+
+
+# =========================
+# 🧱 NODE & SCHEDULING
+# =========================
+
+kubectl get nodes
+# Purpose: List nodes
+# When: Check cluster status
+
+kubectl cordon <node-name>
+# Purpose: Mark node unschedulable
+# When: Maintenance
+
+kubectl drain <node-name>
+# Purpose: Move pods from node
+# When: Node shutdown
+
+
+# =========================
+# 🔐 ADVANCED DEBUGGING
+# =========================
+
+kubectl get pods --field-selector=status.phase=Pending
+# Purpose: Filter pending pods
+# When: Scheduling issues
+
+kubectl get pods --sort-by=.metadata.creationTimestamp
+# Purpose: Sort pods by time
+# When: Recent failures
+
+kubectl get events --sort-by=.metadata.creationTimestamp
+# Purpose: Sort events
+# When: Timeline debugging
+
+kubectl api-resources
+# Purpose: List all resource kinds
+# When: Exploring cluster
+
+
+# =========================
+# 🚀 POWER USER COMMANDS
+# =========================
+
+kubectl edit deployment <name>
+# Purpose: Edit live resource
+# When: Quick fixes
+
+kubectl port-forward pod/<pod-name> 8080:80
+# Purpose: Access pod locally
+# When: Debug API/UI
+
+kubectl proxy
+# Purpose: Access Kubernetes API
+# When: Internal debugging
+
+kubectl cluster-info
+# Purpose: Cluster details
+# When: Verify cluster access
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+# =========================
+# 🔥 ADVANCED DEBUGGING COMMANDS (REAL PRODUCTION)
+# =========================
+
+# -------------------------
+# 📌 POD DEEP DEBUGGING
+# -------------------------
+
+kubectl get pod <pod-name> -o yaml
+# Purpose: Full pod definition (actual running state)
+# When: Need exact config, env vars, volume mounts
+
+kubectl get pod <pod-name> -o jsonpath='{.status.containerStatuses[*].state}'
+# Purpose: Get container state (waiting/running/terminated)
+# When: Debug crash reasons
+
+kubectl get pod <pod-name> -o jsonpath='{.status.containerStatuses[*].lastState}'
+# Purpose: Previous container state
+# When: CrashLoopBackOff root cause
+
+kubectl describe pod <pod-name> | grep -i error
+# Purpose: Filter only errors
+# When: Faster debugging
+
+
+# -------------------------
+# 📌 IMAGE & CONTAINER ISSUES
+# -------------------------
+
+kubectl describe pod <pod-name> | grep -i image
+# Purpose: Check image pull issues
+# When: ImagePullBackOff
+
+kubectl get events | grep -i "pull"
+# Purpose: Image pull failures
+# When: Registry/auth issue
+
+
+# -------------------------
+# 📌 NETWORK DEBUGGING
+# -------------------------
+
+kubectl exec -it <pod-name> -- curl http://<service-name>:<port>
+# Purpose: Test service connectivity
+# When: Service not reachable
+
+kubectl exec -it <pod-name> -- ping <service-name>
+# Purpose: Check DNS/network
+# When: Network issue
+
+kubectl exec -it <pod-name> -- nslookup <service-name>
+# Purpose: DNS resolution
+# When: Service name not resolving
+
+kubectl run debug-pod --image=busybox -it --rm -- sh
+# Purpose: Temporary debug pod
+# When: Test network from cluster
+
+
+# -------------------------
+# 📌 SERVICE DEBUGGING
+# -------------------------
+
+kubectl get svc <service-name> -o yaml
+# Purpose: Full service config
+# When: Service misconfiguration
+
+kubectl get endpoints <service-name>
+# Purpose: Check connected pods
+# When: No traffic reaching pods
+
+kubectl describe svc <service-name>
+# Purpose: Check selector & ports
+# When: Routing issue
+
+
+# -------------------------
+# 📌 NODE LEVEL DEBUGGING
+# -------------------------
+
+kubectl describe node <node-name> | grep -i pressure
+# Purpose: Check memory/cpu/disk pressure
+# When: Pod not scheduling
+
+kubectl top node
+# Purpose: Resource usage
+# When: High load
+
+kubectl get nodes -o wide
+# Purpose: Node details
+# When: Node identification
+
+
+# -------------------------
+# 📌 SCHEDULING ISSUES
+# -------------------------
+
+kubectl describe pod <pod-name> | grep -i "Insufficient"
+# Purpose: Resource shortage
+# When: Pending pods
+
+kubectl describe pod <pod-name> | grep -i taint
+# Purpose: Taints issue
+# When: Pod not scheduling
+
+kubectl get nodes --show-labels
+# Purpose: Node labels
+# When: NodeSelector mismatch
+
+
+# -------------------------
+# 📌 LOGGING ADVANCED
+# -------------------------
+
+kubectl logs -f <pod-name>
+# Purpose: Live logs (streaming)
+# When: Real-time debugging
+
+kubectl logs --tail=100 <pod-name>
+# Purpose: Last 100 lines
+# When: Quick check
+
+kubectl logs --since=10m <pod-name>
+# Purpose: Logs from last 10 mins
+# When: Recent issue
+
+
+# -------------------------
+# 📌 MULTI-CONTAINER DEBUGGING
+# -------------------------
+
+kubectl describe pod <pod-name> | grep -i container
+# Purpose: Container info
+# When: Multiple containers
+
+kubectl logs <pod-name> -c <container-name>
+# Purpose: Specific container logs
+# When: Sidecar issues
+
+
+# -------------------------
+# 📌 CONFIG DEBUGGING
+# -------------------------
+
+kubectl get configmap <name> -o yaml
+# Purpose: View config values
+# When: Wrong config issue
+
+kubectl exec -it <pod-name> -- printenv
+# Purpose: Check env variables
+# When: ConfigMap/Secret issue
+
+
+# -------------------------
+# 📌 STORAGE DEBUGGING
+# -------------------------
+
+kubectl get pvc
+# Purpose: Check PVC status
+# When: Volume issue
+
+kubectl describe pvc <name>
+# Purpose: PVC details
+# When: Pending storage
+
+kubectl describe pod <pod-name> | grep -i mount
+# Purpose: Volume mount errors
+# When: Storage issues
+
+
+# -------------------------
+# 📌 DEPLOYMENT DEBUGGING
+# -------------------------
+
+kubectl rollout status deployment <name>
+# Purpose: Check deployment progress
+# When: Deployment stuck
+
+kubectl rollout pause deployment <name>
+# Purpose: Pause rollout
+# When: Debug during deploy
+
+kubectl rollout resume deployment <name>
+# Purpose: Resume rollout
+# When: Continue after fix
+
+
+# -------------------------
+# 📌 CLUSTER DEBUGGING
+# -------------------------
+
+kubectl cluster-info dump
+# Purpose: Full cluster state dump
+# When: Deep debugging
+
+kubectl get componentstatuses
+# Purpose: Check control plane components
+# When: Cluster issue
+
+
+# -------------------------
+# 📌 PERFORMANCE DEBUGGING
+# -------------------------
+
+kubectl top pod --containers
+# Purpose: Per container usage
+# When: High CPU/memory
+
+kubectl describe pod <pod-name> | grep -i cpu
+# Purpose: CPU limits/requests
+# When: CPU issues
+
+
+# -------------------------
+# 📌 CLEANUP / FORCE DEBUG
+# -------------------------
+
+kubectl delete pod <pod-name> --force --grace-period=0
+# Purpose: Force delete stuck pod
+# When: Pod stuck in Terminating
+
+kubectl get pod <pod-name> -w
+# Purpose: Watch live changes
+# When: Debug real-time state changes
+_______________________________________________________________________________________________________
+kubectl commands
+
+
+kubectl get nodes
+kubectl get pod
+kubectl get services
+kubectl create deployment nginx-depl --image=nginx
+kubectl get deployment
+kubectl get replicaset
+kubectl edit deployment nginx-depl
+
+debugging
+
+kubectl logs {pod-name}
+kubectl exec -it {pod-name} -- bin/bash
+create mongo deployment
+kubectl create deployment mongo-depl --image=mongo
+kubectl logs mongo-depl-{pod-name}
+kubectl describe pod mongo-depl-{pod-name}
+delete deployment
+kubectl delete deployment mongo-depl
+kubectl delete deployment nginx-depl
+
+create or edit config file
+
+vim nginx-deployment.yaml
+kubectl apply -f nginx-deployment.yaml
+kubectl get pod
+kubectl get deployment
+
+delete with config
+
+kubectl delete -f nginx-deployment.yaml
+#Metrics
+kubectl top The kubectl top command returns current CPU and memory usage for a cluster’s pods or nodes, or for a particular pod or node if specified.
+
+
+kubectl get svc kubernetes -o yaml , to view the svc file in terming in yaml formate
+
+
+
+kubectl get all,configmaps,secrets,pvc -n <namespace> to check what is in namespaces in side
+
+
+kubectl config set-context --current --namespace=dev, to change one name space ot another
+
+kubectl config set-context --current --namespace=prod, to switch to another namae space
+
+Check Current Namespace
+kubectl config view --minify | grep namespace
+or
+kubectl config get-contexts
+
+
+4. Temporary Usage (Without Switching)
+If you don’t want to switch permanently:
+kubectl get pods -n dev
+
+Real DevOps Usage Scenario
+
+When node is overloaded:
+
+kubectl describe node <node>
+kubectl top node <node>
+kubectl get pods -A --field-selector spec.nodeName=<node>
+
+👉 Then:
+
+Identify high CPU pods
+Check logs
+Reschedule or scale
+
+
+Get Pods from Only One Namespace on Node
+kubectl get pods -n dev -o wide | grep <node-name>
+
+Check Resource Usage (Important for SRE)
+kubectl top node <node-name>
+✔️ Helps you understand:
+CPU usage
+Memory usage
+Describe Node (Quick Overview)
+kubectl describe node <node-name>
+✔️ Shows:
+Allocated resources
+Running pods list
+CPU/Memory usage
+---
+Cluster & Context Commands
+kubectl cluster-info
+kubectl version
+kubectl config view
+kubectl config get-contexts
+kubectl config use-context <context-name>
+📦 2. Pod Commands (MOST IMPORTANT)
+kubectl get pods
+kubectl get pods -A
+kubectl get pods -o wide
+kubectl describe pod <pod-name>
+kubectl logs <pod-name>
+kubectl logs -f <pod-name>   # live logs
+kubectl exec -it <pod-name> -- /bin/bash
+kubectl delete pod <pod-name>
+
+👉 Debugging pod:
+
+kubectl get pod <pod> -o yaml
+kubectl describe pod <pod>
+🚀 3. Deployment Commands
+kubectl get deployments
+kubectl create deployment nginx --image=nginx
+kubectl apply -f deployment.yaml
+kubectl delete deployment <name>
+
+kubectl scale deployment <name> --replicas=3
+kubectl rollout status deployment <name>
+kubectl rollout history deployment <name>
+kubectl rollout undo deployment <name>
+
+👉 Update image:
+
+kubectl set image deployment/<name> nginx=nginx:latest
+🌐 4. Service Commands
+kubectl get svc
+kubectl describe svc <name>
+kubectl expose deployment <name> --type=NodePort --port=80
+kubectl delete svc <name>
+🔁 5. ReplicaSet Commands
+kubectl get rs
+kubectl describe rs <name>
+kubectl delete rs <name>
+📂 6. Namespace Commands
+kubectl get ns
+kubectl create ns dev
+kubectl delete ns dev
+kubectl config set-context --current --namespace=dev
+📊 7. Node Commands
+kubectl get nodes
+kubectl describe node <node-name>
+kubectl cordon <node>        # mark unschedulable
+kubectl uncordon <node>
+kubectl drain <node>         # remove pods safely
+🔐 8. ConfigMap & Secrets
+kubectl get configmaps
+kubectl create configmap my-config --from-literal=key=value
+kubectl describe configmap my-config
+
+kubectl get secrets
+kubectl create secret generic my-secret --from-literal=password=1234
+kubectl describe secret my-secret
+📦 9. YAML Apply & Delete (DAY-TO-DAY)
+kubectl apply -f file.yaml
+kubectl delete -f file.yaml
+kubectl create -f file.yaml
+
+👉 Dry run:
+
+kubectl apply -f file.yaml --dry-run=client
+🔍 10. Debugging & Troubleshooting (VERY IMPORTANT 🔥)
+kubectl describe pod <pod>
+kubectl logs <pod>
+kubectl logs <pod> -c <container>
+
+kubectl get events
+kubectl top pod
+kubectl top node
+
+👉 Check resource usage (Metrics Server needed):
+
+kubectl top pods
+🔗 11. Networking Commands
+kubectl get ingress
+kubectl describe ingress <name>
+
+kubectl port-forward pod/<pod> 8080:80
+📈 12. HPA (Auto Scaling)
+kubectl get hpa
+kubectl autoscale deployment <name> --cpu-percent=50 --min=1 --max=5
+kubectl describe hpa <name>
+🧠 13. Advanced (DevOps Real Work)
+kubectl get all
+kubectl get all -A
+
+kubectl edit deployment <name>
+kubectl patch deployment <name> -p '{"spec":{"replicas":2}}'
+
+kubectl label pod <pod> env=prod
+kubectl annotate pod <pod> team=devops
+🧹 14. Cleanup Commands
+kubectl delete pod --all
+kubectl delete all --all
+📜 15. Output Formatting
+kubectl get pods -o yaml
+kubectl get pods -o json
+kubectl get pods -o wide
+⚡ 16. Shortcuts (VERY USEFUL)
+kubectl get po        # pods
+kubectl get svc       # services
+kubectl get deploy    # deployments
+kubectl get ns        # namespaces
+🔥 REAL DEVOPS SCENARIO COMMANDS
+
+👉 Restart deployment:
+
+kubectl rollout restart deployment <name>
+
+👉 Check failing pod quickly:
+
+kubectl describe pod <pod>
+kubectl logs <pod>
+
+👉 Exec into container:
+
+kubectl exec -it <pod> -- sh
+🚀 PRO TIPS (Interview + Job)
+Always start debugging with:
+kubectl get pods
+kubectl describe pod
+kubectl logs
+Most used in real job:
+logs
+describe
+exec
+get (with -o wide)
